@@ -29,7 +29,7 @@ const Products = () => {
 
   return (
     <section className="bg-grey-100 pt-10 md:pt-[10vh] md:pb-[15vh] lg:pt-10 lg:pb-[20vh] px-4 md:px-[1vw] lg:px-[8vw] text-white w-full relative">
-      <div className="mx-auto max-w-[93%] md:max-w-[90%] flex flex-col lgs:flex-row justify-between mb-14 md:mb-28 lg:mb-10 lg:items-center lg:gap-12 gap-5">
+      <div className="mx-auto max-w-[93%] md:max-w-[90%] flex flex-col lg:flex-row justify-between mb-14 md:mb-28 lg:mb-10 lg:items-center lg:gap-12 gap-5">
         {/* Left header text */}
         <div className="w-full lg:w-[60%] shrink-0">
           <h2 className="text-heading-5 text-[28px] md:text-heading-4 !font-medium ">
