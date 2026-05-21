@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { fetchEvents, EventData } from "./data";
 import EventCard from "./components/EventCard";
 import { FaSearch, FaChevronDown } from "react-icons/fa";
-import sparkle from "@/assets/graphics/sparkle.svg";
 import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
 
 const Events = () => {
@@ -202,18 +201,22 @@ const Events = () => {
           <span className={`transition-colors duration-500 ${getRevealClass()}`}>
             Ideas
           </span>{" "}
-          <span
+          <svg
             aria-hidden="true"
             className="mx-1 inline-block h-8 w-8 align-[-0.1em] transition-colors duration-500"
+            viewBox="0 0 26 26"
+            fill="none"
             style={{
-              backgroundColor: sparkleProgress >= 1 ? "#00AD66" : "#5F5F5F",
-              mask: `url(${sparkle}) center / contain no-repeat`,
-              WebkitMask: `url(${sparkle}) center / contain no-repeat`,
+              color: sparkleProgress >= 1 ? "#00AD66" : "#5F5F5F",
               transform: `rotate(${(1 - sparkleProgress) * -45}deg)`,
-              transition:
-                "transform 500ms ease, background-color 500ms ease",
+              transition: "transform 500ms ease, color 500ms ease",
             }}
-          />
+          >
+            <path
+              d="M0 5.12305C0 5.12305 4.72094 8.50112 11.1953 6.86005C17.6696 5.21898 20.2114 -1.50981e-05 20.2114 -1.50981e-05C20.2114 -1.50981e-05 16.9275 5.1097 18.4703 11.1963C20.0131 17.2828 25.3344 20.2114 25.3344 20.2114C25.3344 20.2114 20.2785 16.9434 14.1452 18.498C8.0119 20.0527 5.12306 25.3344 5.12306 25.3344C5.12306 25.3344 8.21306 19.5933 6.83235 14.1462C5.45165 8.69907 0 5.12305 0 5.12305Z"
+              fill="currentColor"
+            />
+          </svg>
           <span className={`transition-colors duration-500 ${getRevealClass()}`}>
             hit
           </span>{" "}
