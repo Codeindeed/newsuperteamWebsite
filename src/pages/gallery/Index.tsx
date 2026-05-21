@@ -15,11 +15,7 @@ type GalleryMedia = {
   type: "photo" | "video";
 };
 
-const galleryMedia: GalleryMedia[] = [
-  ...galleryImages,
-  ...galleryImages.slice(0, 5),
-  ...galleryImages.slice(1, 5),
-].map((src) => ({
+const galleryMedia: GalleryMedia[] = galleryImages.map((src) => ({
   src,
   type: "photo",
 }));
