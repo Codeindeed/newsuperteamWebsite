@@ -298,7 +298,7 @@ const GalleryShowcase = () => {
             {filteredMedia.map((media, index) => (
               <div
                 key={`gallery-page-${activeFilter}-${index}`}
-                className={`relative mb-3 md:mb-4 w-full break-inside-avoid rounded-lg overflow-hidden group border border-white/10 bg-[#111] cursor-pointer ${
+                className={`relative mb-3 md:mb-4 w-full break-inside-avoid rounded-lg overflow-hidden [clip-path:inset(0_round_0.5rem)] group border border-white/10 bg-[#111] cursor-pointer ${
                   index % 5 === 1 || index % 5 === 4
                     ? "h-[220px] md:h-[310px]"
                     : "h-[160px] md:h-[230px]"
@@ -309,13 +309,13 @@ const GalleryShowcase = () => {
                   <video
                     src={media.src}
                     controls
-                    className="w-full h-full object-center object-cover"
+                    className="w-full h-full rounded-[inherit] object-center object-cover"
                   />
                 ) : (
                   <img
                     src={media.src}
                     alt={`SuperteamNG gallery moment ${index + 1}`}
-                    className="w-full h-full object-center object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full rounded-[inherit] object-center object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 )}
               </div>
