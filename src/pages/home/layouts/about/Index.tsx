@@ -36,7 +36,7 @@ const About = () => {
   }, [containerRef]);
 
   const isItemRevealed = (sequenceIndex: number) => {
-    const threshold = sequenceIndex / Math.max(totalRevealItems - 1, 1);
+    const threshold = sequenceIndex / Math.max(totalRevealItems, 1);
     return revealProgress >= threshold;
   };
 
