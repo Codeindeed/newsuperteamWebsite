@@ -1,13 +1,12 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { galleryImages } from "@/data/images/Index";
 import Button from "@/components/button/Index";
 
 const Gallery = () => {
-  const initialImages = useMemo(() => [...galleryImages], []);
-  const [images, setImages] = useState(initialImages);
+  const [images, setImages] = useState(galleryImages);
 
   const shuffleGallery = () => {
-    const shuffled = [...galleryImages];
+    const shuffled = [...images];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
