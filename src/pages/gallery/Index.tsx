@@ -6,7 +6,11 @@ import VerticalScrollContainer, {
 import Events from "@/pages/home/layouts/events/Index";
 import Footer from "@/pages/home/layouts/footer/Index";
 import { FaChevronDown } from "react-icons/fa";
-import { HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineRefresh, HiX } from "react-icons/hi";
+import {
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
+  HiOutlineRefresh,
+} from "react-icons/hi";
 
 type MediaFilter = "All Media" | "Photos" | "Videos";
 
@@ -112,6 +116,34 @@ const GalleryShowcase = () => {
   useEffect(() => {
     setActivePreviewIndex(null);
   }, [activeFilter]);
+
+  useEffect(() => {
+    if (activePreviewIndex === null) return;
+
+    const container = containerRef?.current;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousContainerOverflow = container?.style.overflow;
+    const previousContainerOverscroll = container?.style.overscrollBehavior;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    if (container) {
+      container.style.overflow = "hidden";
+      container.style.overscrollBehavior = "contain";
+    }
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+
+      if (container) {
+        container.style.overflow = previousContainerOverflow ?? "";
+        container.style.overscrollBehavior = previousContainerOverscroll ?? "";
+      }
+    };
+  }, [activePreviewIndex, containerRef]);
 
   useEffect(() => {
     if (activePreviewIndex === null) return;
@@ -248,7 +280,7 @@ const GalleryShowcase = () => {
 
       {activePreview && (
         <div
-          className="fixed inset-0 z-[90] flex items-center justify-center px-4 py-10"
+          className="fixed inset-0 z-[90] flex items-center justify-center overflow-hidden px-4 py-10"
           style={{
             backgroundColor: "#0F0F0FE5",
             backdropFilter: "blur(16.049999237060547px)",
@@ -257,16 +289,9 @@ const GalleryShowcase = () => {
           aria-modal="true"
           aria-label="Gallery preview"
           onClick={() => setActivePreviewIndex(null)}
+          onWheel={(event) => event.preventDefault()}
+          onTouchMove={(event) => event.preventDefault()}
         >
-          <button
-            type="button"
-            aria-label="Close preview"
-            onClick={() => setActivePreviewIndex(null)}
-            className="absolute right-5 top-5 z-[2] flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-700 hover:bg-white/20"
-          >
-            <HiX className="text-[22px]" />
-          </button>
-
           <button
             type="button"
             aria-label="Previous image"
@@ -280,7 +305,7 @@ const GalleryShowcase = () => {
           </button>
 
           <div
-            className="relative w-full max-w-[920px] overflow-hidden rounded-2xl bg-[#111] shadow-2xl"
+            className="fixed inset-0 z-[1] flex items-center justify-center overflow-hidden px-4 py-10"
             onClick={(event) => event.stopPropagation()}
           >
             {activePreview.type === "video" ? (
@@ -288,13 +313,13 @@ const GalleryShowcase = () => {
                 src={activePreview.src}
                 controls
                 autoPlay
-                className="max-h-[76vh] w-full object-contain"
+                className="max-h-[82vh] max-w-[92vw] object-contain"
               />
             ) : (
               <img
                 src={activePreview.src}
                 alt={`SuperteamNG gallery preview ${(activePreviewIndex ?? 0) + 1}`}
-                className="max-h-[76vh] w-full object-contain"
+                className="max-h-[82vh] max-w-[92vw] object-contain"
               />
             )}
           </div>
