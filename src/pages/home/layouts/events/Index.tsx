@@ -3,10 +3,14 @@ import { fetchEvents, EventData } from "./data";
 import EventCard from "./components/EventCard";
 import { FaSearch, FaChevronDown } from "react-icons/fa";
 import sparkle from "@/assets/graphics/sparkle.svg";
+import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
 
 const Events = () => {
+  const eventsRef = useRef<HTMLElement>(null);
+  const { containerRef } = useScrollContainer();
   const [events, setEvents] = useState<EventData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [revealProgress, setRevealProgress] = useState(0);
   const [filter, setFilter] = useState<"All Events" | "IRL" | "Virtual">(
     "All Events",
   );
@@ -15,6 +19,34 @@ const Events = () => {
   const [timeFilter, setTimeFilter] = useState("This Week");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const totalRevealItems = 14;
+
+  useEffect(() => {
+    const container = containerRef?.current;
+    const eventsSection = eventsRef.current;
+    if (!container || !eventsSection) return;
+
+    const updateRevealProgress = () => {
+      const containerRect = container.getBoundingClientRect();
+      const eventsRect = eventsSection.getBoundingClientRect();
+      const eventsTop = eventsRect.top - containerRect.top + container.scrollTop;
+      const viewportHeight = container.clientHeight;
+      const revealRange = viewportHeight * 0.75;
+      const distanceFromFullView = Math.abs(container.scrollTop - eventsTop);
+      const progress = 1 - distanceFromFullView / Math.max(revealRange, 1);
+
+      setRevealProgress(Math.min(1, Math.max(0, progress)));
+    };
+
+    updateRevealProgress();
+    container.addEventListener("scroll", updateRevealProgress);
+    window.addEventListener("resize", updateRevealProgress);
+
+    return () => {
+      container.removeEventListener("scroll", updateRevealProgress);
+      window.removeEventListener("resize", updateRevealProgress);
+    };
+  }, [containerRef]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -129,10 +161,33 @@ const Events = () => {
   };
 
   const displayDatesArr = getFilterDateRange();
+  const isItemRevealed = (sequenceIndex: number) => {
+    const threshold = sequenceIndex / Math.max(totalRevealItems, 1);
+    return revealProgress >= threshold;
+  };
+
+  let sequenceIndex = -1;
+  const getRevealClass = () => {
+    sequenceIndex += 1;
+    return isItemRevealed(sequenceIndex) ? "text-white" : "text-[#5F5F5F]";
+  };
+
+  const sparkleSequenceIndex = 1;
+  const sparkleRevealStart = sparkleSequenceIndex / Math.max(totalRevealItems, 1);
+  const sparkleRevealEnd = (sparkleSequenceIndex + 1) / Math.max(totalRevealItems, 1);
+  const sparkleProgress = Math.min(
+    1,
+    Math.max(
+      0,
+      (revealProgress - sparkleRevealStart) /
+        Math.max(sparkleRevealEnd - sparkleRevealStart, 0.001),
+    ),
+  );
 
   return (
     <section
       id="events"
+      ref={eventsRef}
       className="bg-[#0F0F0F] pt-14 md:pt-24 pb-24 md:pb-40 px-4 md:px-7 lg:px-10 text-white w-full"
     >
       <div className="max-w-7xl mx-auto flex flex-col items-center">
@@ -144,14 +199,60 @@ const Events = () => {
 
         {/* Heading */}
         <h2 className="text-heading-6 md:text-heading-5 !font-medium text-center mb-16 lg:max-w-[800px] max-w-[90%]">
-          <span className="text-white">Ideas</span>{" "}
-          <span className="text-[#5F5F5F]">
-            <img src={sparkle} alt="" className="inline mr-1 h-8" />
-            hit different when we come together,
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            Ideas
+          </span>{" "}
+          <span
+            aria-hidden="true"
+            className="mx-1 inline-block h-8 w-8 align-[-0.1em] transition-colors duration-500"
+            style={{
+              backgroundColor: sparkleProgress >= 1 ? "#00AD66" : "#5F5F5F",
+              mask: `url(${sparkle}) center / contain no-repeat`,
+              WebkitMask: `url(${sparkle}) center / contain no-repeat`,
+              transform: `rotate(${(1 - sparkleProgress) * -45}deg)`,
+              transition:
+                "transform 500ms ease, background-color 500ms ease",
+            }}
+          />
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            hit
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            different
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            when
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            we
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            come
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            together,
           </span>{" "}
           <br className="hidden lg:block" />{" "}
-          <span className="text-[#5F5F5F]">
-            You really just have to be there.
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            You
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            really
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            just
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            have
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            to
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            be
+          </span>{" "}
+          <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+            there.
           </span>
         </h2>
 
