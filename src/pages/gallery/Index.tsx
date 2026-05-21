@@ -11,6 +11,7 @@ import {
   HiOutlineChevronRight,
   HiOutlineRefresh,
 } from "react-icons/hi";
+import { createPortal } from "react-dom";
 
 type MediaFilter = "All Media" | "Photos" | "Videos";
 
@@ -166,12 +167,76 @@ const GalleryShowcase = () => {
     return () => document.removeEventListener("keydown", handlePreviewKeydown);
   }, [activePreviewIndex, filteredMedia.length]);
 
+  const previewOverlay = activePreview
+    ? createPortal(
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center overflow-hidden px-4 py-10"
+          style={{
+            backgroundColor: "#0F0F0FE5",
+            backdropFilter: "blur(16.049999237060547px)",
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Gallery preview"
+          onClick={() => setActivePreviewIndex(null)}
+          onWheel={(event) => event.preventDefault()}
+          onTouchMove={(event) => event.preventDefault()}
+        >
+          <button
+            type="button"
+            aria-label="Previous image"
+            onClick={(event) => {
+              event.stopPropagation();
+              showPreviousPreview();
+            }}
+            className="absolute left-4 md:left-8 z-[2] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-700 hover:bg-white/20"
+          >
+            <HiOutlineChevronLeft className="text-[28px]" />
+          </button>
+
+          <div
+            className="fixed inset-0 z-[1] flex items-center justify-center overflow-hidden px-4 py-10"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {activePreview.type === "video" ? (
+              <video
+                src={activePreview.src}
+                controls
+                autoPlay
+                className="max-h-[82vh] max-w-[92vw] object-contain"
+              />
+            ) : (
+              <img
+                src={activePreview.src}
+                alt={`SuperteamNG gallery preview ${(activePreviewIndex ?? 0) + 1}`}
+                className="max-h-[82vh] max-w-[92vw] object-contain"
+              />
+            )}
+          </div>
+
+          <button
+            type="button"
+            aria-label="Next image"
+            onClick={(event) => {
+              event.stopPropagation();
+              showNextPreview();
+            }}
+            className="absolute right-4 md:right-8 z-[2] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-700 hover:bg-white/20"
+          >
+            <HiOutlineChevronRight className="text-[28px]" />
+          </button>
+        </div>,
+        document.body,
+      )
+    : null;
+
   return (
-    <section
-      id="gallery-wall"
-      className="relative w-full min-h-screen bg-black px-4 md:px-[5vw] lg:px-[12vw] pt-28 pb-28 text-white overflow-hidden"
-    >
-      <div className="max-w-[960px] mx-auto">
+    <>
+      <section
+        id="gallery-wall"
+        className="relative w-full min-h-screen bg-black px-4 md:px-[5vw] lg:px-[12vw] pt-28 pb-28 text-white overflow-hidden"
+      >
+        <div className="max-w-[960px] mx-auto">
         <div className="flex flex-col items-center text-center mb-12 md:mb-16">
           <h1 className="text-[52px] leading-[0.95] md:text-[88px] lg:text-[112px] md:leading-[0.95] !font-medium text-white">
             From Where We Stand
@@ -278,65 +343,8 @@ const GalleryShowcase = () => {
         </div>
       </div>
 
-      {activePreview && (
-        <div
-          className="fixed inset-0 z-[90] flex items-center justify-center overflow-hidden px-4 py-10"
-          style={{
-            backgroundColor: "#0F0F0FE5",
-            backdropFilter: "blur(16.049999237060547px)",
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Gallery preview"
-          onClick={() => setActivePreviewIndex(null)}
-          onWheel={(event) => event.preventDefault()}
-          onTouchMove={(event) => event.preventDefault()}
-        >
-          <button
-            type="button"
-            aria-label="Previous image"
-            onClick={(event) => {
-              event.stopPropagation();
-              showPreviousPreview();
-            }}
-            className="absolute left-4 md:left-8 z-[2] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-700 hover:bg-white/20"
-          >
-            <HiOutlineChevronLeft className="text-[28px]" />
-          </button>
-
-          <div
-            className="fixed inset-0 z-[1] flex items-center justify-center overflow-hidden px-4 py-10"
-            onClick={(event) => event.stopPropagation()}
-          >
-            {activePreview.type === "video" ? (
-              <video
-                src={activePreview.src}
-                controls
-                autoPlay
-                className="max-h-[82vh] max-w-[92vw] object-contain"
-              />
-            ) : (
-              <img
-                src={activePreview.src}
-                alt={`SuperteamNG gallery preview ${(activePreviewIndex ?? 0) + 1}`}
-                className="max-h-[82vh] max-w-[92vw] object-contain"
-              />
-            )}
-          </div>
-
-          <button
-            type="button"
-            aria-label="Next image"
-            onClick={(event) => {
-              event.stopPropagation();
-              showNextPreview();
-            }}
-            className="absolute right-4 md:right-8 z-[2] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-700 hover:bg-white/20"
-          >
-            <HiOutlineChevronRight className="text-[28px]" />
-          </button>
-        </div>
-      )}
-    </section>
+      </section>
+      {previewOverlay}
+    </>
   );
 };
