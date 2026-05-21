@@ -18,9 +18,9 @@ const About = () => {
       const aboutRect = about.getBoundingClientRect();
       const aboutTop = aboutRect.top - containerRect.top + container.scrollTop;
       const viewportHeight = container.clientHeight;
-      const start = aboutTop - viewportHeight * 0.55;
-      const end = aboutTop + viewportHeight * 0.35;
-      const progress = (container.scrollTop - start) / Math.max(end - start, 1);
+      const revealRange = viewportHeight * 0.75;
+      const distanceFromFullView = Math.abs(container.scrollTop - aboutTop);
+      const progress = 1 - distanceFromFullView / Math.max(revealRange, 1);
 
       setRevealProgress(Math.min(1, Math.max(0, progress)));
     };
