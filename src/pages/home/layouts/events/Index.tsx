@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { fetchEvents, EventData } from "./data";
 import EventCard from "./components/EventCard";
 import { FaSearch, FaChevronDown } from "react-icons/fa";
-import sparkle from "@/assets/graphics/Sparkle.svg";
+import sparkle from "@/assets/graphics/sparkle.svg";
 
 const Events = () => {
   const [events, setEvents] = useState<EventData[]>([]);
