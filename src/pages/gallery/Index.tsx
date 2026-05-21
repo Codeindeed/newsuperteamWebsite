@@ -195,7 +195,7 @@ const GalleryShowcase = () => {
           </button>
 
           <div
-            className="fixed inset-0 z-[1] flex items-center justify-center overflow-hidden px-4 py-10"
+            className="relative z-[1] flex max-h-[82vh] max-w-[92vw] items-center justify-center overflow-hidden"
             onClick={(event) => event.stopPropagation()}
           >
             {activePreview.type === "video" ? (
