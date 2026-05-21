@@ -40,9 +40,23 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
       </div>
 
       {/* Action */}
-      <button className="w-full bg-grey-100 hover:bg-grey-80 transition-colors duration-700 hover:text-white text-body-5 font-medium text-[#5F5F5F] py-3.5 rounded-md mt-3 flex items-center justify-center">
-        Register
-      </button>
+      {event.registrationUrl ? (
+        <a
+          href={event.registrationUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="w-full bg-grey-100 hover:bg-grey-80 transition-colors duration-700 hover:text-white text-body-5 font-medium text-[#5F5F5F] py-3.5 rounded-md mt-3 flex items-center justify-center"
+        >
+          Register
+        </a>
+      ) : (
+        <button
+          type="button"
+          className="w-full bg-grey-100 hover:bg-grey-80 transition-colors duration-700 hover:text-white text-body-5 font-medium text-[#5F5F5F] py-3.5 rounded-md mt-3 flex items-center justify-center"
+        >
+          Register
+        </button>
+      )}
     </div>
   );
 };

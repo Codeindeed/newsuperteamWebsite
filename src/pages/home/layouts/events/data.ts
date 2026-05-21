@@ -8,6 +8,7 @@ export interface EventData {
   community: string;
   type: EventType;
   date: string;
+  registrationUrl?: string;
 }
 
 interface RecurringEventData extends Omit<EventData, 'id' | 'date'> {
@@ -95,8 +96,89 @@ const RECURRING_EVENTS: RecurringEventData[] = [
   },
 ];
 
+const LUMA_EVENTS: EventData[] = [
+  {
+    id: 'luma-bitcoin-pizza-day-superteamng-owerri',
+    title: 'Bitcoin Pizza Day SuperteamNG',
+    timeRange: '11:00 AM - 3:00 PM',
+    timezone: 'WAT',
+    community: 'Owerri, Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/2hj9p9zp',
+  },
+  {
+    id: 'luma-bitcoin-pizza-day-cross-river',
+    title: 'Bitcoin Pizza Day - SuperteamNG Cross River State',
+    timeRange: '1:00 PM - 4:00 PM',
+    timezone: 'WAT',
+    community: 'Calabar, Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/w8di4q8c',
+  },
+  {
+    id: 'luma-adamawa-bitcoin-pizza-day',
+    title: 'Adamawa Bitcoin Pizza Day',
+    timeRange: '2:00 PM - 6:00 PM',
+    timezone: 'WAT',
+    community: 'Jimeta, Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/by0vjenn',
+  },
+  {
+    id: 'luma-bitcoin-pizza-day-feyishola',
+    title: 'Bitcoin Pizza Day',
+    timeRange: '2:00 PM - 3:00 PM',
+    timezone: 'WAT',
+    community: 'Superteam Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/oaetp8lj',
+  },
+  {
+    id: 'luma-bitcoin-pizza-day-lasu',
+    title: 'Bitcoin Pizza Day - LASU',
+    timeRange: '2:30 PM - 3:30 PM',
+    timezone: 'WAT',
+    community: 'LASU, Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/ptzfuqna',
+  },
+  {
+    id: 'luma-pizza-proof-people-ibadan',
+    title: 'Pizza, Proof & People - Bitcoin Pizza Day Ibadan',
+    timeRange: '3:00 PM - 7:00 PM',
+    timezone: 'WAT',
+    community: 'Ibadan, Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/nmj2dgji',
+  },
+  {
+    id: 'luma-solana-pizza-day',
+    title: 'Solana Pizza Day',
+    timeRange: '3:00 PM - 5:00 PM',
+    timezone: 'WAT',
+    community: 'Superteam Nigeria',
+    type: 'IRL',
+    date: '2026-05-22',
+    registrationUrl: 'https://luma.com/4ku7xk59',
+  },
+];
+
 export const fetchEvents = async (): Promise<EventData[]> => {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(generateWeeklyEvents(RECURRING_EVENTS)), 1500);
+    setTimeout(
+      () =>
+        resolve(
+          [...generateWeeklyEvents(RECURRING_EVENTS), ...LUMA_EVENTS].sort(
+            (a, b) => a.date.localeCompare(b.date),
+          ),
+        ),
+      1500,
+    );
   });
 };
