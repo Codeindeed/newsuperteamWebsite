@@ -11,11 +11,16 @@ import product10 from "@/assets/graphics/product-10.jpg";
 import product11 from "@/assets/graphics/product-11.jpg";
 import nzube from "@/assets/founders/zuby.svg";
 import harrison from "@/assets/founders/harri.svg";
-import gallery1 from "@/assets/gallery/img-1.png";
-import gallery2 from "@/assets/gallery/img-2.png";
-import gallery3 from "@/assets/gallery/img-3.png";
-import gallery4 from "@/assets/gallery/img-4.png";
-import gallery5 from "@/assets/gallery/img-5.png";
+import speaker1 from "@/assets/gallery/speaker-01.jpg";
+import speaker2 from "@/assets/gallery/speaker-02.jpg";
+import speaker3 from "@/assets/gallery/speaker-03.jpg";
+import speaker4 from "@/assets/gallery/speaker-04.jpg";
+import speaker5 from "@/assets/gallery/speaker-05.jpg";
+import speaker6 from "@/assets/gallery/speaker-06.jpg";
+import speaker7 from "@/assets/gallery/speaker-07.jpg";
+import speaker8 from "@/assets/gallery/speaker-08.jpg";
+import speaker9 from "@/assets/gallery/speaker-09.jpg";
+import speaker10 from "@/assets/gallery/speaker-10.jpg";
 
 export const timelineLogo = timeline;
 export const mapImg = map;
@@ -33,10 +38,14 @@ export const productImages = [
 export const nzubeImg = nzube;
 export const harrisonImg = harrison;
 export const galleryImages = [
-  gallery1,
-  gallery2,
-  gallery3,
-  gallery4,
-  gallery5,
-  gallery1,
+  speaker1,
+  speaker2,
+  speaker3,
+  speaker4,
+  speaker5,
+  speaker6,
+  speaker7,
+  speaker8,
+  speaker9,
+  speaker10,
 ];
