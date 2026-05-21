@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Button from "@/components/button/Index";
-import { mapImg, timelineLogo } from "@/data/images/Index";
+import { mapImg, solanaLogoGif } from "@/data/images/Index";
 
 const Header = () => {
   return (
@@ -11,7 +11,17 @@ const Header = () => {
       <div className="lg:mt-[7vh]">
         <h2 className="md:text-heading-3 text-heading-5 !font-medium text-white text-center">
           <span className="flex items-center gap-2 justify-center">
-            Leading <img src={timelineLogo} alt="timeline" /> Solana’s
+            Leading{" "}
+            <video
+              src={solanaLogoGif}
+              className="inline-block h-[0.9em] w-[1.8em] rounded-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-label="Solana"
+            />
+            Solana’s
           </span>
           Growth in Nigeria!
         </h2>

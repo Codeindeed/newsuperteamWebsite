@@ -1,4 +1,5 @@
 import timeline from "@/assets/graphics/timeline.svg";
+import solanaGif from "@/assets/graphics/solanalogogif.mp4";
 import map from "@/assets/graphics/map.svg";
 import members from "@/assets/graphics/members.svg";
 import solana from "@/assets/graphics/solana-2.svg";
@@ -23,6 +24,7 @@ import speaker9 from "@/assets/gallery/speaker-09.jpg";
 import speaker10 from "@/assets/gallery/speaker-10.jpg";
 
 export const timelineLogo = timeline;
+export const solanaLogoGif = solanaGif;
 export const mapImg = map;
 export const membersImg = members;
 export const solanaLogo = solana;

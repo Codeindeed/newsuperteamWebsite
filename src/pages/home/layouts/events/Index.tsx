@@ -171,17 +171,7 @@ const Events = () => {
     return isItemRevealed(sequenceIndex) ? "text-white" : "text-[#5F5F5F]";
   };
 
-  const sparkleSequenceIndex = 1;
-  const sparkleRevealStart = sparkleSequenceIndex / Math.max(totalRevealItems, 1);
-  const sparkleRevealEnd = (sparkleSequenceIndex + 1) / Math.max(totalRevealItems, 1);
-  const sparkleProgress = Math.min(
-    1,
-    Math.max(
-      0,
-      (revealProgress - sparkleRevealStart) /
-        Math.max(sparkleRevealEnd - sparkleRevealStart, 0.001),
-    ),
-  );
+  const sparkleRotation = -45 + revealProgress * 90;
 
   return (
     <section
@@ -207,8 +197,8 @@ const Events = () => {
             viewBox="0 0 26 26"
             fill="none"
             style={{
-              color: sparkleProgress >= 1 ? "#00AD66" : "#5F5F5F",
-              transform: `rotate(${(1 - sparkleProgress) * -45}deg)`,
+              color: revealProgress >= 1 ? "#00AD66" : "#5F5F5F",
+              transform: `rotate(${sparkleRotation}deg)`,
               transition: "transform 500ms ease, color 500ms ease",
             }}
           >
