@@ -3,7 +3,7 @@ import { galleryImages } from "@/data/images/Index";
 import Button from "@/components/button/Index";
 
 const Gallery = () => {
-  const [images, setImages] = useState(galleryImages);
+  const [images, setImages] = useState(() => galleryImages.slice(0, 8));
 
   const shuffleGallery = () => {
     const shuffled = [...images];
@@ -64,7 +64,7 @@ const Gallery = () => {
                 <img
                   src={img}
                   alt={`Gallery ${i}`}
-                  className="w-full h-full object-center object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full rounded-[inherit] object-center object-cover transition-transform duration-500 will-change-transform hover:scale-110 group-hover:scale-110"
                 />
               </div>
             ))}

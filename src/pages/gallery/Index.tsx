@@ -315,7 +315,7 @@ const GalleryShowcase = () => {
                   <img
                     src={media.src}
                     alt={`SuperteamNG gallery moment ${index + 1}`}
-                    className="w-full h-full rounded-[inherit] object-center object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full rounded-[inherit] object-center object-cover transition-transform duration-500 will-change-transform hover:scale-110 group-hover:scale-110"
                   />
                 )}
               </div>
