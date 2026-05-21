@@ -129,10 +129,10 @@ const LUMA_EVENTS: EventData[] = [
   },
   {
     id: 'luma-bitcoin-pizza-day-feyishola',
-    title: 'Bitcoin Pizza Day - Nigeria',
+    title: 'Bitcoin Pizza Day - Kwara State',
     timeRange: '2:00 PM - 3:00 PM',
     timezone: 'WAT',
-    community: 'Nigeria',
+    community: 'Kwara State',
     type: 'IRL',
     date: '2026-05-22',
     registrationUrl: 'https://luma.com/oaetp8lj',
