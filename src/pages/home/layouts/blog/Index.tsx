@@ -18,7 +18,10 @@ const Blog = () => {
   }, []);
 
   return (
-    <section className="bg-[#0F0F0F] pt-14 md:pt-20 pb-32 lg:pb-40 px-5 md:px-10 lg:px-[12vw] text-white w-full">
+    <section
+      id="blog"
+      className="bg-[#0F0F0F] pt-14 md:pt-20 pb-32 lg:pb-40 px-5 md:px-10 lg:px-[12vw] text-white w-full"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-start justify-between mb-16 gap-6">
@@ -31,7 +34,11 @@ const Blog = () => {
             </p>
           </div>
 
-          <Button type="primary" className="w-fit mt-1 md:mt-0">
+          <Button
+            type="primary"
+            className="w-fit mt-1 md:mt-0"
+            to="https://superteamnigeria.substack.com/"
+          >
             View All
           </Button>
         </div>
@@ -39,7 +46,7 @@ const Blog = () => {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading
-            ? Array(3)
+            ? Array(5)
                 .fill(0)
                 .map((_, i) => (
                   <div

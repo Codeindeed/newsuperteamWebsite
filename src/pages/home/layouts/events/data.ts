@@ -10,62 +10,93 @@ export interface EventData {
   date: string;
 }
 
-const getRelativeDateStr = (daysOffset: number) => {
-  const d = new Date();
-  d.setDate(d.getDate() + daysOffset);
-  return d.toISOString().split('T')[0];
+interface RecurringEventData extends Omit<EventData, 'id' | 'date'> {
+  id: string;
+  weekday: number;
+}
+
+const formatDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 };
 
-export const MOCK_EVENTS: EventData[] = [
+const getCalendarEndDate = () => {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth() + 6, 0);
+};
+
+const generateWeeklyEvents = (events: RecurringEventData[]) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const calendarEndDate = getCalendarEndDate();
+
+  return events.flatMap((event) => {
+    const firstEventDate = new Date(today);
+    const daysUntilEvent = (event.weekday - today.getDay() + 7) % 7;
+    firstEventDate.setDate(today.getDate() + daysUntilEvent);
+
+    const eventDates: EventData[] = [];
+    const currentDate = new Date(firstEventDate);
+
+    while (currentDate <= calendarEndDate) {
+      const date = formatDate(currentDate);
+      eventDates.push({
+        ...event,
+        id: `${event.id}-${date}`,
+        date,
+      });
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return eventDates;
+  });
+};
+
+const RECURRING_EVENTS: RecurringEventData[] = [
   {
-    id: '1',
+    id: 'superteamng-weekly-call',
     title: 'SuperteamNG Weekly Community Call',
-    timeRange: '3:30 PM - 6:30 PM',
-    timezone: 'GMT+1',
-    community: 'Superteam Nigeria',
+    timeRange: '6:00 PM - 7:00 PM',
+    timezone: 'WAT',
+    community: 'YouTube Channel',
     type: 'Virtual',
-    date: getRelativeDateStr(0),
+    weekday: 4,
   },
   {
-    id: '2',
-    title: 'Solana Summer, Abuja, Nigeria',
-    timeRange: '3:30 PM - 6:30 PM',
-    timezone: 'GMT+1',
-    community: 'Solana',
-    type: 'IRL',
-    date: getRelativeDateStr(2),
+    id: 'developers-call',
+    title: 'Developers Call',
+    timeRange: '8:00 PM - 9:00 PM',
+    timezone: 'WAT',
+    community: 'Google Meet',
+    type: 'Virtual',
+    weekday: 0,
   },
   {
-    id: '3',
-    title: "Writer's Community Call",
-    timeRange: '3:30 PM - 6:30 PM',
-    timezone: 'GMT+1',
-    community: 'Outis & Asiel',
+    id: 'writers-call',
+    title: "Writers Call",
+    timeRange: '7:00 PM - 8:00 PM',
+    timezone: 'WAT',
+    community: 'Google Meet',
     type: 'Virtual',
-    date: getRelativeDateStr(2),
+    weekday: 2,
   },
   {
-    id: '4',
-    title: 'Lagos State Weekly Community Call',
-    timeRange: '3:30 PM - 6:30 PM',
-    timezone: 'GMT+1',
-    community: 'Manyo',
+    id: 'designers-call',
+    title: 'Designers Call',
+    timeRange: '8:00 PM - 9:00 PM',
+    timezone: 'WAT',
+    community: 'Google Meet',
     type: 'Virtual',
-    date: getRelativeDateStr(10),
+    weekday: 2,
   },
-  {
-    id: '5',
-    title: 'Imo State Weekly Community Call',
-    timeRange: '3:30 PM - 6:30 PM',
-    timezone: 'GMT+1',
-    community: 'Toochukwu',
-    type: 'Virtual',
-    date: getRelativeDateStr(15),
-  }
 ];
 
 export const fetchEvents = async (): Promise<EventData[]> => {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(MOCK_EVENTS), 1500); // Simulate network delay
+    setTimeout(() => resolve(generateWeeklyEvents(RECURRING_EVENTS)), 1500);
   });
 };

@@ -43,9 +43,31 @@ function Button({
 
   //BUTTON IS A LINK TYPE
   if (to) {
+    const isExternal = /^https?:\/\//.test(to);
+    const content = (
+      <>
+        <HiArrowSmallRight className="text-white -rotate-45 text-[14px] md:text-[17px] absolute top-1/2 -translate-y-1/2 left-3.5 " />
+        {children}
+      </>
+    );
+
+    if (isExternal) {
+      return (
+        <a
+          href={to}
+          className={style}
+          target="_blank"
+          rel="noreferrer"
+          {...props}
+        >
+          {content}
+        </a>
+      );
+    }
+
     return (
       <Link to={to} className={style} {...props}>
-        {children}
+        {content}
       </Link>
     );
   }

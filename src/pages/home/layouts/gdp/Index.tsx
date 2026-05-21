@@ -5,7 +5,10 @@ import StatesCard from "./components/states-card/Index";
 
 const Gdp = () => {
   return (
-    <div className="relative w-full min-h-screen pb-32 md:pb-80 pt-16 bg-black flex items-center justify-center px-4 md:px-[5vw] lg:px-[13vw]">
+    <div
+      id="gdp"
+      className="relative w-full min-h-screen pb-32 md:pb-80 pt-16 bg-black flex items-center justify-center px-4 md:px-[5vw] lg:px-[13vw]"
+    >
       <div className="w-full max-w-[1200px] grid grid-cols-12 gap-4 lg:h-[600px]">
         {/* Left Column (4 cols) */}
         <div className="lg:col-span-3 col-span-12 flex flex-col lg:flex-col md:flex-row gap-4">

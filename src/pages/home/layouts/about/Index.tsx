@@ -2,7 +2,10 @@ import { harrisonImg, nzubeImg } from "@/data/images/Index";
 
 const About = () => {
   return (
-    <div className="relative w-full h-screen bg-black flex items-center justify-center px-8 pb-36 pt-5 md:pb-40">
+    <div
+      id="about"
+      className="relative w-full h-screen bg-black flex items-center justify-center px-8 pb-36 pt-5 md:pb-40"
+    >
       <div className="max-w-[850px] mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-20">
         <div className="lg:col-span-3">
           <span className="inline-block px-4 py-1.5 rounded-full bg-[#1A1A1A] border border-[#333] text-[#aaa] text-body-5 font-medium">

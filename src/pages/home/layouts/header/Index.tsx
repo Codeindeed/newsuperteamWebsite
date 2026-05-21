@@ -4,7 +4,10 @@ import { mapImg, timelineLogo } from "@/data/images/Index";
 
 const Header = () => {
   return (
-    <div className="relative w-full h-screen flex justify-center items-center">
+    <div
+      id="home"
+      className="relative w-full h-screen flex justify-center items-center"
+    >
       <div className="lg:mt-[7vh]">
         <h2 className="md:text-heading-3 text-heading-5 !font-medium text-white text-center">
           <span className="flex items-center gap-2 justify-center">
@@ -17,8 +20,12 @@ const Header = () => {
           projects and community building.
         </p>
         <div className="flex items-center justify-center gap-4 mt-8">
-          <Button type="primary">Start Earning</Button>
-          <Button type="secondary">Join the Community</Button>
+          <Button type="primary" to="https://superteam.fun/earn/">
+            Start Earning
+          </Button>
+          <Button type="secondary" to="https://x.com/SuperteamNG">
+            Join the Community
+          </Button>
         </div>
         <motion.img
           src={mapImg}

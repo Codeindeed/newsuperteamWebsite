@@ -2,14 +2,13 @@ import timeline from "@/assets/graphics/timeline.svg";
 import map from "@/assets/graphics/map.svg";
 import members from "@/assets/graphics/members.svg";
 import solana from "@/assets/graphics/solana-2.svg";
-import product1 from "@/assets/graphics/product-1.svg";
 import product2 from "@/assets/graphics/product-2.svg";
 import product3 from "@/assets/graphics/product-3.svg";
-import product4 from "@/assets/graphics/product-4.svg";
-import product5 from "@/assets/graphics/product-5.svg";
-import product6 from "@/assets/graphics/product-6.svg";
 import product7 from "@/assets/graphics/product-7.svg";
 import product8 from "@/assets/graphics/product-8.svg";
+import product9 from "@/assets/graphics/product-9.jpg";
+import product10 from "@/assets/graphics/product-10.jpg";
+import product11 from "@/assets/graphics/product-11.jpg";
 import nzube from "@/assets/founders/zuby.svg";
 import harrison from "@/assets/founders/harri.svg";
 import gallery1 from "@/assets/gallery/img-1.png";
@@ -23,14 +22,13 @@ export const mapImg = map;
 export const membersImg = members;
 export const solanaLogo = solana;
 export const productImages = [
-  product1,
   product2,
   product3,
-  product4,
-  product5,
-  product6,
   product7,
   product8,
+  product9,
+  product10,
+  product11,
 ];
 export const nzubeImg = nzube;
 export const harrisonImg = harrison;

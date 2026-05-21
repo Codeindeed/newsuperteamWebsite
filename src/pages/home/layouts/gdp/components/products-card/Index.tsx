@@ -29,7 +29,7 @@ const ProductsCard = () => {
                 key={i}
                 animate={{ rotate: -360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute w-10 h-10 bg-[#1A1A1A] rounded-full flex items-center justify-center border border-[#333] transition-transform hover:scale-110"
+                className="absolute w-10 h-10 bg-[#1A1A1A] rounded-full flex items-center justify-center border border-[#333] overflow-hidden transition-transform hover:scale-110"
                 style={{
                   x,
                   y,
@@ -38,7 +38,7 @@ const ProductsCard = () => {
                 <img
                   src={img}
                   alt={`Product ${i}`}
-                  className="w-10 h-10 object-contain grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="w-9 h-9 rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-300 cursor-pointer"
                 />
               </motion.div>
             );

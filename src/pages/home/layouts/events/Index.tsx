@@ -10,6 +10,7 @@ const Events = () => {
   const [filter, setFilter] = useState<"All Events" | "IRL" | "Virtual">(
     "All Events",
   );
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [timeFilter, setTimeFilter] = useState("This Week");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,9 +39,25 @@ const Events = () => {
     loadData();
   }, []);
 
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
   const filteredEvents = events.filter((e) => {
-    if (filter === "All Events") return true;
-    return e.type === filter;
+    const matchesType = filter === "All Events" || e.type === filter;
+    const normalizedSearch = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      normalizedSearch.length === 0 ||
+      [e.title, e.community, e.timeRange, e.timezone, e.type]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedSearch);
+
+    return matchesType && matchesSearch;
   });
 
   const groupedEvents = filteredEvents.reduce<Record<string, EventData[]>>(
@@ -69,7 +86,7 @@ const Events = () => {
     "December",
   ];
   const today = new Date();
-  const todayISO = today.toISOString().split("T")[0];
+  const todayISO = formatDate(today);
 
   // Options for time filter
   const timeOptions = ["This Week", "This Month"];
@@ -114,7 +131,10 @@ const Events = () => {
   const displayDatesArr = getFilterDateRange();
 
   return (
-    <section className="bg-[#0F0F0F] pt-14 md:pt-24 pb-24 md:pb-40 px-4 md:px-7 lg:px-10 text-white w-full">
+    <section
+      id="events"
+      className="bg-[#0F0F0F] pt-14 md:pt-24 pb-24 md:pb-40 px-4 md:px-7 lg:px-10 text-white w-full"
+    >
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Top Badge */}
         <div className="bg-[#131E19] text-primary text-body-5 px-4 py-1.5 rounded-full mb-8 font-medium tracking-wide flex items-center gap-2">
@@ -161,6 +181,8 @@ const Events = () => {
                 <input
                   type="text"
                   placeholder="Search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
                   className="bg-[#1A1A1A] text-white placeholder-[#5F5F5F] text-body-5 rounded-full px-2.5 py-2 md:px-3 md:py-3 w-32 md:w-48 focus:outline-none focus:ring-1 focus:ring-white/20 transition-all font-medium border border-transparent focus:border-white/10"
                 />
                 <button>
@@ -221,7 +243,7 @@ const Events = () => {
                   </div>
                 )}
                 {displayDatesArr.map((dateObj) => {
-                  const dateISO = dateObj.toISOString().split("T")[0];
+                  const dateISO = formatDate(dateObj);
                   const dayEvents = groupedEvents[dateISO] || [];
                   const isToday = dateISO === todayISO;
 

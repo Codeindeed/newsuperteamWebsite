@@ -15,7 +15,10 @@ const Gallery = () => {
   };
 
   return (
-    <div className="w-full px-4 md:px-[5vw] lg:px-[14vw] pb-40 pt-8 scroll-smooth">
+    <div
+      id="gallery"
+      className="w-full px-4 md:px-[5vw] lg:px-[14vw] pb-40 pt-8 scroll-smooth"
+    >
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
@@ -46,7 +49,9 @@ const Gallery = () => {
               />
             </svg>
           </button>
-          <Button type="primary">See More</Button>
+          <Button type="primary" to="/gallery">
+            See More
+          </Button>
         </div>
         {/* Masonry Grid */}
         <div>

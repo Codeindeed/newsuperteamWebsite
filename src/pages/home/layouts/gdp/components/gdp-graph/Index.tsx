@@ -8,12 +8,28 @@ import {
   XAxis,
 } from "recharts";
 
-const data = [
-  { name: "JUN", value: 400000 },
-  { name: "JUL", value: 550000 },
-  { name: "AUG", value: 850000 },
-  { name: "SEPT", value: 935000 },
-];
+const gdpValues = [400000, 550000, 850000, 1300000];
+
+const getRecentMonthLabels = (count: number) => {
+  const currentMonth = new Date();
+  currentMonth.setDate(1);
+
+  return Array.from({ length: count }, (_, i) => {
+    const date = new Date(currentMonth);
+    date.setMonth(currentMonth.getMonth() - (count - i - 1));
+
+    return date
+      .toLocaleString("en-US", { month: "short" })
+      .toUpperCase();
+  });
+};
+
+const monthLabels = getRecentMonthLabels(gdpValues.length);
+
+const data = gdpValues.map((value, i) => ({
+  name: monthLabels[i],
+  value,
+}));
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -37,6 +53,14 @@ const GdpGraphCard = () => {
     : 0;
 
   const isPositive = percentage >= 0;
+  const gdpValue =
+    currentItem.value >= 1000000
+      ? `${(currentItem.value / 1000000).toLocaleString(undefined, {
+          maximumFractionDigits: 1,
+        })}m`
+      : `${(currentItem.value / 1000).toLocaleString(undefined, {
+          maximumFractionDigits: 0,
+        })}k`;
 
   return (
     <div className="bg-[#0F0F0F] rounded-2xl md:p-8 p-4 h-full flex flex-col relative overflow-hidden">
@@ -47,13 +71,7 @@ const GdpGraphCard = () => {
       `}</style>
       <div className="flex justify-between items-start mb-4 z-10 w-full">
         <div className="text-heading-7 md:text-heading-6 md:!text-[25px] !font-medium">
-          <div className="text-white">
-            $
-            {(currentItem.value / 1000).toLocaleString(undefined, {
-              maximumFractionDigits: 0,
-            })}
-            k+ in
-          </div>
+          <div className="text-white">${gdpValue}+ in</div>
           <div className="text-[#5F5F5F]">Community GDP</div>
         </div>
         <div className="flex flex-col md:flex-row md:items-center gap-0.5 md:gap-2 text-xs justify-self-end">

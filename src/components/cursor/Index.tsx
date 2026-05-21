@@ -1263,9 +1263,9 @@ export default function SplashCursor({
 
     function clickSplat(pointer: Pointer) {
       const color = generateColor();
-      color.r *= 10;
-      color.g *= 10;
-      color.b *= 10;
+      color.r *= 2;
+      color.g *= 2;
+      color.b *= 2;
       const dx = 10 * (Math.random() - 0.5);
       const dy = 30 * (Math.random() - 0.5);
       splat(pointer.texcoordX, pointer.texcoordY, dx, dy, color);
@@ -1380,8 +1380,7 @@ export default function SplashCursor({
       const r = 0.0;
       const g = 0.678 + (Math.random() - 0.5) * 0.1;
       const b = 0.4 + (Math.random() - 0.5) * 0.1;
-      // Make it subtle - multiply by 0.3
-      return { r: r * 0.3, g: g * 0.3, b: b * 0.3 };
+      return { r: r * 0.08, g: g * 0.08, b: b * 0.08 };
     }
 
     // function HSVtoRGB(h: number, s: number, v: number): ColorRGB {
@@ -1530,7 +1529,7 @@ export default function SplashCursor({
   return (
     <div className="fixed top-0 left-0 z-[9999] pointer-events-none w-full h-full">
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 border border-[#00AD66]/40 rounded-full z-[10000]"
+        className="fixed top-0 left-0 w-10 h-10 border border-[#00AD66]/15 rounded-full z-[10000]"
         style={{
           x: cursorX,
           y: cursorY,
@@ -1539,7 +1538,7 @@ export default function SplashCursor({
         }}
       />
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-[#00AD66]/60 rounded-full z-[10000]"
+        className="fixed top-0 left-0 w-2 h-2 bg-[#00AD66]/20 rounded-full z-[10000]"
         style={{
           x: cursorX,
           y: cursorY,

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, ReactNode, createContext, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import Navigation from "../navigation/Index";
 
 interface ScrollContextType {
@@ -119,6 +120,7 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
   showScrollIndicator = true,
   //progressBarColor = "from-primary to-secondary",
 }) => {
+  const location = useLocation();
   const [layoutVersion, setLayoutVersion] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [scrollData, setScrollData] = useState({
@@ -128,6 +130,23 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const sections = React.Children.toArray(children);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    window.requestAnimationFrame(() => {
+      if (!location.hash) {
+        container.scrollTo({ top: 0, left: 0 });
+        return;
+      }
+
+      const target = document.getElementById(location.hash.slice(1));
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     const container = containerRef.current;

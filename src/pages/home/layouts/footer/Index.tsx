@@ -2,8 +2,54 @@ import { FaDiscord, FaInstagram, FaTiktok } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { HiArrowUpRight } from "react-icons/hi2";
 import PossibleSolana from "@/assets/graphics/possible-solana.svg";
-import { Link } from "react-router-dom";
 import Logo from "@/components/logo/Index";
+
+const siteLinks = [
+  { title: "Home", url: "/#home" },
+  { title: "About Us", url: "/#about" },
+  { title: "Gallery", url: "/gallery" },
+  { title: "Events", url: "/#events" },
+  { title: "Products", url: "/#products" },
+  { title: "Blog", url: "/#blog" },
+];
+
+const resourceLinks = [
+  { title: "Superteam", url: "https://superteam.fun/" },
+  { title: "Build", url: "https://superteam.fun/build" },
+  { title: "Earn", url: "https://superteam.fun/earn/" },
+];
+
+const guildLinks = [
+  { title: "Developers", url: "https://discord.com/invite/C6EgkeEAed" },
+  { title: "Product", url: "https://discord.com/invite/C6EgkeEAed" },
+  { title: "Designers", url: "https://discord.com/invite/C6EgkeEAed" },
+  { title: "Writers", url: "https://discord.com/invite/C6EgkeEAed" },
+  { title: "Content Creators", url: "https://discord.com/invite/C6EgkeEAed" },
+  { title: "State Guilds", url: "https://discord.com/invite/C6EgkeEAed" },
+];
+
+const socialLinks = [
+  {
+    label: "X",
+    url: "https://x.com/SuperteamNG",
+    Icon: FaXTwitter,
+  },
+  {
+    label: "Discord",
+    url: "https://discord.com/invite/C6EgkeEAed",
+    Icon: FaDiscord,
+  },
+  {
+    label: "Instagram",
+    url: "https://www.instagram.com/superteamng/",
+    Icon: FaInstagram,
+  },
+  {
+    label: "TikTok",
+    url: "https://www.tiktok.com/@superteamng",
+    Icon: FaTiktok,
+  },
+];
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -45,46 +91,33 @@ const Footer = () => {
                 {/* Site Map */}
                 <BottomLinks
                   title="Site Map"
-                  links={[
-                    { title: "Home", url: "/" },
-                    { title: "About Us", url: "#" },
-                    { title: "Gallery", url: "#" },
-                    { title: "Events", url: "#" },
-                    { title: "Products", url: "#" },
-                    { title: "Blog", url: "#" },
-                  ]}
+                  links={siteLinks}
                 />
 
                 {/* Resources */}
                 <BottomLinks
                   title="Resources"
-                  links={[
-                    { title: "Superteam", url: "#" },
-                    { title: "Build", url: "#" },
-                    { title: "Earn", url: "#" },
-                  ]}
+                  links={resourceLinks}
                 />
 
                 {/* Join A Guild */}
-                <BottomLinks
-                  title="Join A Guild"
-                  links={[
-                    { title: "Developers", url: "#" },
-                    { title: "Product", url: "#" },
-                    { title: "Designers", url: "#" },
-                    { title: "Writers", url: "#" },
-                    { title: "Content Creators", url: "#" },
-                    { title: "State Guilds", url: "#" },
-                  ]}
-                />
+                <BottomLinks title="Join A Guild" links={guildLinks} />
               </div>
 
               {/* Social Icons */}
               <div className="flex items-center gap-3.5 justify-start xl:justify-end h-fit">
-                <FaXTwitter className="text-[24px] text-white hover:text-primary duration-700 cursor-pointer transition-all" />
-                <FaDiscord className="text-[24px] text-white hover:text-primary duration-700 cursor-pointer transition-all" />
-                <FaInstagram className="text-[24px] text-white hover:text-primary duration-700 cursor-pointer transition-all" />
-                <FaTiktok className="text-[24px] text-white hover:text-primary duration-700 cursor-pointer transition-all" />
+                {socialLinks.map(({ label, url, Icon }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className="text-[24px] text-white hover:text-primary duration-700 cursor-pointer transition-all"
+                  >
+                    <Icon />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -125,12 +158,16 @@ const BottomLinks = ({
       <ul className="flex flex-col gap-3 text-body-6 text-[#525252] uppercase">
         {links.map((item, index) => {
           return (
-            <Link
-              to={item.url}
-              className="hover:text-grey-40 duration-700 cursor-pointer transition-colors"
-            >
-              <li key={index}>{item.title} </li>
-            </Link>
+            <li key={index}>
+              <a
+                href={item.url}
+                target={item.url.startsWith("http") ? "_blank" : undefined}
+                rel={item.url.startsWith("http") ? "noreferrer" : undefined}
+                className="hover:text-grey-40 duration-700 cursor-pointer transition-colors"
+              >
+                {item.title}
+              </a>
+            </li>
           );
         })}
       </ul>

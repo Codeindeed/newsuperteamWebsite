@@ -6,7 +6,9 @@ const Navigation = () => {
     <div className="px-[8vw] py-5 flex items-center justify-between">
       <Logo className="h-8" to="/" />
 
-      <Button type="secondary">Join the Community</Button>
+      <Button type="secondary" to="https://x.com/SuperteamNG">
+        Join the Community
+      </Button>
     </div>
   );
 };
