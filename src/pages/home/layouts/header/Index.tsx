@@ -14,7 +14,7 @@ const Header = () => {
             Leading{" "}
             <video
               src={solanaLogoGif}
-              className="inline-block h-[0.9em] w-[1.8em] rounded-full object-cover"
+              className="inline-block h-[0.9em] w-[1.2em] rounded-full object-cover"
               autoPlay
               muted
               loop

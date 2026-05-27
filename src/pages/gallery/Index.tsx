@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { galleryImages } from "@/data/images/Index";
+import Button from "@/components/button/Index";
 import VerticalScrollContainer, {
   useScrollContainer,
 } from "@/layouts/vertical-scroll-container/Index";
@@ -9,24 +10,27 @@ import { FaChevronDown } from "react-icons/fa";
 import {
   HiOutlineChevronLeft,
   HiOutlineChevronRight,
-  HiOutlineRefresh,
 } from "react-icons/hi";
 import { createPortal } from "react-dom";
 
 type MediaFilter = "All Media" | "Photos" | "Videos";
+type DateFilter = "Most Recent" | "May 2026" | "April 2026" | "March 2026";
 
 type GalleryMedia = {
   src: string;
   type: "photo" | "video";
+  uploadedAt: string;
 };
 
 const galleryMedia: GalleryMedia[] = [
   ...galleryImages,
   ...galleryImages.slice(0, 5),
   ...galleryImages.slice(1, 5),
-].map((src) => ({
+].map((src, index) => ({
   src,
   type: "photo",
+  uploadedAt:
+    index < 7 ? "2026-05-18" : index < 13 ? "2026-04-21" : "2026-03-16",
 }));
 
 const GalleryPage = () => {
@@ -42,9 +46,23 @@ const GalleryPage = () => {
 export default GalleryPage;
 
 const galleryFilters: MediaFilter[] = ["All Media", "Photos", "Videos"];
+const dateFilters: DateFilter[] = [
+  "Most Recent",
+  "May 2026",
+  "April 2026",
+  "March 2026",
+];
+const initialVisibleMediaCount = 12;
+const visibleMediaBatchSize = 6;
 
 const GalleryShowcase = () => {
   const [activeFilter, setActiveFilter] = useState<MediaFilter>("All Media");
+  const [activeDateFilter, setActiveDateFilter] =
+    useState<DateFilter>("Most Recent");
+  const [showDateFilters, setShowDateFilters] = useState(false);
+  const [visibleMediaCount, setVisibleMediaCount] = useState(
+    initialVisibleMediaCount,
+  );
   const [activePreviewIndex, setActivePreviewIndex] = useState<number | null>(
     null,
   );
@@ -55,16 +73,36 @@ const GalleryShowcase = () => {
   const { containerRef } = useScrollContainer();
 
   const filteredMedia = useMemo(() => {
+    const media = [...galleryMedia].sort((firstItem, secondItem) =>
+      secondItem.uploadedAt.localeCompare(firstItem.uploadedAt),
+    );
+
+    const dateFilteredMedia =
+      activeDateFilter === "Most Recent"
+        ? media
+        : media.filter((item) => {
+            const date = new Date(`${item.uploadedAt}T00:00:00`);
+            return (
+              date.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              }) === activeDateFilter
+            );
+          });
+
     if (activeFilter === "Photos") {
-      return galleryMedia.filter((item) => item.type === "photo");
+      return dateFilteredMedia.filter((item) => item.type === "photo");
     }
 
     if (activeFilter === "Videos") {
-      return galleryMedia.filter((item) => item.type === "video");
+      return dateFilteredMedia.filter((item) => item.type === "video");
     }
 
-    return galleryMedia;
-  }, [activeFilter]);
+    return dateFilteredMedia;
+  }, [activeDateFilter, activeFilter]);
+
+  const visibleMedia = filteredMedia.slice(0, visibleMediaCount);
+  const hasMoreMedia = visibleMediaCount < filteredMedia.length;
 
   const activePreview =
     activePreviewIndex === null ? null : filteredMedia[activePreviewIndex];
@@ -88,7 +126,7 @@ const GalleryShowcase = () => {
   useEffect(() => {
     const container = containerRef?.current;
     const mediaGrid = mediaGridRef.current;
-    if (!container || !mediaGrid || filteredMedia.length === 0) {
+    if (!container || !mediaGrid || visibleMedia.length === 0) {
       setShowMediaScrollProgress(false);
       return;
     }
@@ -112,11 +150,13 @@ const GalleryShowcase = () => {
       container.removeEventListener("scroll", updateMediaProgress);
       window.removeEventListener("resize", updateMediaProgress);
     };
-  }, [containerRef, filteredMedia.length]);
+  }, [containerRef, visibleMedia.length]);
 
   useEffect(() => {
     setActivePreviewIndex(null);
-  }, [activeFilter]);
+    setVisibleMediaCount(initialVisibleMediaCount);
+    setShowDateFilters(false);
+  }, [activeDateFilter, activeFilter]);
 
   useEffect(() => {
     if (activePreviewIndex === null) return;
@@ -260,12 +300,41 @@ const GalleryShowcase = () => {
                 </button>
               ))}
             </div>
-            <button className="group relative flex items-center gap-4 overflow-hidden bg-[#1F1F1F] border border-[#2B2B2B] p-1 rounded-full text-body-5 md:text-body-4 text-[#6F6F6F] transition-colors duration-700 hover:text-white before:absolute before:inset-y-1 before:left-1 before:w-[calc(100%-46px)] before:rounded-full before:bg-[#000000] before:content-[''] before:transition-all before:duration-700 hover:before:w-[calc(100%-8px)]">
-              <span className="relative z-[1] px-5 md:px-6 py-3">
-                Most Recent
-              </span>
-              <FaChevronDown className="relative z-[1] mr-4 text-white text-body-5 transition-transform duration-700 group-hover:rotate-180" />
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowDateFilters((isOpen) => !isOpen)}
+                className="group relative flex items-center gap-4 overflow-hidden bg-[#1F1F1F] border border-[#2B2B2B] p-1 rounded-full text-body-5 md:text-body-4 text-white transition-colors duration-700 before:absolute before:inset-y-1 before:left-1 before:w-[calc(100%-46px)] before:rounded-full before:bg-[#000000] before:content-[''] before:transition-all before:duration-700 hover:before:w-[calc(100%-8px)]"
+              >
+                <span className="relative z-[1] px-5 md:px-6 py-3">
+                  {activeDateFilter}
+                </span>
+                <FaChevronDown
+                  className={`relative z-[1] mr-4 text-white text-body-5 transition-transform duration-700 ${
+                    showDateFilters ? "rotate-180" : "group-hover:rotate-180"
+                  }`}
+                />
+              </button>
+
+              {showDateFilters && (
+                <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-20 overflow-hidden rounded-2xl border border-[#2B2B2B] bg-[#1A1A1A] p-1 shadow-2xl">
+                  {dateFilters.map((filter) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      onClick={() => setActiveDateFilter(filter)}
+                      className={`block w-full rounded-xl px-4 py-3 text-left text-body-5 transition-colors duration-500 ${
+                        activeDateFilter === filter
+                          ? "bg-black text-white"
+                          : "text-[#777] hover:bg-black hover:text-white"
+                      }`}
+                    >
+                      {filter}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -290,14 +359,14 @@ const GalleryShowcase = () => {
           </div>
         )}
 
-        {filteredMedia.length > 0 ? (
+        {visibleMedia.length > 0 ? (
           <div
             ref={mediaGridRef}
             className="columns-2 md:columns-3 gap-3 md:gap-4"
           >
-            {filteredMedia.map((media, index) => (
+            {visibleMedia.map((media, index) => (
               <div
-                key={`gallery-page-${activeFilter}-${index}`}
+                key={`gallery-page-${activeFilter}-${activeDateFilter}-${index}`}
                 className={`relative mb-3 md:mb-4 w-full break-inside-avoid rounded-lg overflow-hidden [clip-path:inset(0_round_0.5rem)] group border border-white/10 bg-[#111] cursor-pointer ${
                   index % 5 === 1 || index % 5 === 4
                     ? "h-[220px] md:h-[310px]"
@@ -324,23 +393,29 @@ const GalleryShowcase = () => {
         ) : (
           <div className="min-h-[320px] rounded-lg border border-white/10 bg-[#0F0F0F] flex flex-col items-center justify-center text-center px-6">
             <p className="text-heading-7 text-white !font-medium">
-              No videos yet
+              No media found
             </p>
             <p className="text-body-5 text-[#525252] mt-2 max-w-[360px]">
-              Video moments will show here as soon as they are added to the
-              gallery.
+              Moments for this filter will show here as soon as they are added
+              to the gallery.
             </p>
           </div>
         )}
 
-        <div className="flex justify-center mt-4">
-          <button className="group relative flex h-[84px] items-center overflow-hidden rounded-2xl bg-[#1F1F1F] pl-[102px] pr-8 text-white text-body-3 transition-colors duration-700 hover:bg-[#262626]">
-            <span className="absolute bottom-2 left-2 top-2 z-0 flex w-[78px] items-center justify-center rounded-xl bg-[#6F6F6F] text-white transition-all duration-700 group-hover:w-[calc(100%-16px)]">
-              <HiOutlineRefresh className="text-[30px]" />
-            </span>
-            <span className="relative z-[1]">Load More</span>
-          </button>
-        </div>
+        {hasMoreMedia && (
+          <div className="flex justify-center mt-4">
+            <Button
+              type="primary"
+              typeoF="button"
+              onClick={() =>
+                setVisibleMediaCount((count) => count + visibleMediaBatchSize)
+              }
+              className="text-body-3"
+            >
+              Load More
+            </Button>
+          </div>
+        )}
       </div>
 
       </section>

@@ -62,7 +62,11 @@ const Products = () => {
               className="relative flex w-full flex-col items-center justify-center"
             >
               {products.map((product, i) => {
-                const targetScale = 1 - (products.length - i) * 0.05;
+                const targetScale = Math.max(
+                  0.72,
+                  1 - (products.length - i) * 0.04
+                );
+                const rangeStart = i / Math.max(products.length, 1);
                 return (
                   <StickyCard
                     key={`p_${i}`}
@@ -73,7 +77,7 @@ const Products = () => {
                       </div>
                     }
                     progress={scrollYProgress}
-                    range={[i * 0.25, 1]}
+                    range={[rangeStart, 1]}
                     targetScale={targetScale}
                   />
                 );
