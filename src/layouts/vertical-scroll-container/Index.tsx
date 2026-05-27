@@ -1,4 +1,11 @@
-import React, { useRef, useState, useEffect, ReactNode, createContext, useContext } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocation } from "react-router-dom";
 import Navigation from "../navigation/Index";
 
@@ -41,12 +48,16 @@ const ScrollSection: React.FC<ScrollSectionProps> = ({
 
     updateDimensions();
 
-    const observer = new ResizeObserver(() => {
-      updateDimensions();
-    });
-    observer.observe(element);
+    const ResizeObserverCtor = window.ResizeObserver;
+    if (ResizeObserverCtor) {
+      const observer = new ResizeObserverCtor(updateDimensions);
+      observer.observe(element);
 
-    return () => observer.disconnect();
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
   }, [layoutVersion]);
 
   let distance = 0;
@@ -92,7 +103,7 @@ const ScrollSection: React.FC<ScrollSectionProps> = ({
   return (
     <section
       ref={sectionRef}
-      className={`relative ${isLast ? "min-h-0" : "min-h-screen"} w-full ${isLast ? "snap-end" : "snap-start"} flex ${isLast || dimensions.height > containerHeight ? "items-start" : "items-center"} justify-center overflow-x-clip`}
+      className={`relative ${isLast ? "min-h-0" : "min-h-screen"} w-full ${isLast ? "md:snap-end" : "md:snap-start"} flex ${isLast || dimensions.height > containerHeight ? "items-start" : "items-center"} justify-center overflow-x-clip`}
     >
       <div
         className="w-full h-full transition-transform duration-300 ease-out"
@@ -143,7 +154,11 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
 
       const target = document.getElementById(location.hash.slice(1));
       if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        try {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch {
+          target.scrollIntoView();
+        }
       }
     });
   }, [location.pathname, location.hash]);
@@ -168,16 +183,21 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
       handleScroll();
     };
 
-    const layoutObserver = new ResizeObserver(notifyLayoutChange);
-    // Observe body for any layout shifts anywhere in the app
-    layoutObserver.observe(document.body);
+    const ResizeObserverCtor = window.ResizeObserver;
+    const layoutObserver = ResizeObserverCtor
+      ? new ResizeObserverCtor(notifyLayoutChange)
+      : null;
+    layoutObserver?.observe(document.body);
 
-    const mutationObserver = new MutationObserver(notifyLayoutChange);
-    mutationObserver.observe(container, { 
-      childList: true, 
+    const MutationObserverCtor = window.MutationObserver;
+    const mutationObserver = MutationObserverCtor
+      ? new MutationObserverCtor(notifyLayoutChange)
+      : null;
+    mutationObserver?.observe(container, {
+      childList: true,
       subtree: true,
       attributes: true,
-      characterData: true
+      characterData: true,
     });
 
     handleScroll();
@@ -185,8 +205,8 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
     window.addEventListener("resize", handleScroll);
 
     return () => {
-      layoutObserver.disconnect();
-      mutationObserver.disconnect();
+      layoutObserver?.disconnect();
+      mutationObserver?.disconnect();
       container.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
@@ -195,9 +215,7 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
   return (
     <ScrollContext.Provider value={{ containerRef }}>
       <div className="relative w-full h-screen bg-black overflow-hidden">
-        {showProgress && (
-          <Navigation />
-        )}
+        {showProgress && <Navigation />}
 
         {showScrollIndicator && scrollProgress < 5 && (
           <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white text-sm flex flex-col items-center gap-2 animate-bounce">
@@ -220,7 +238,7 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
 
         <div
           ref={containerRef}
-          className="w-full h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth"
+          className="w-full h-full overflow-y-scroll md:snap-y md:snap-mandatory scroll-smooth"
           style={
             {
               scrollbarWidth: "none",

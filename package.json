@@ -9,6 +9,13 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Edge versions",
+    "last 2 Safari versions",
+    "last 2 Firefox versions",
+    "not dead"
+  ],
   "dependencies": {
     "@tanstack/react-query": "^5.51.1",
     "@types/prop-types": "^15.7.15",

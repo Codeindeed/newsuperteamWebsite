@@ -28,7 +28,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         <div className="mt-12 md:mt-0">
-          <Button type="primary" to={product.productUrl}>
+          <Button
+            type="primary"
+            to={product.productUrl}
+            accentColor={product.pillColorClass}
+          >
             Check Product
           </Button>
         </div>

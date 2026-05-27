@@ -96,6 +96,18 @@ const RECURRING_EVENTS: RecurringEventData[] = [
   },
 ];
 
+const ONE_OFF_EVENTS: EventData[] = [
+  {
+    id: 'solana-summit-2026',
+    title: 'Solana Summit',
+    timeRange: 'TBA',
+    timezone: 'WAT',
+    community: 'TBA',
+    type: 'IRL',
+    date: '2026-08-08',
+  },
+];
+
 const LUMA_EVENTS: EventData[] = [
   {
     id: 'luma-solana-ecosystem-call-delta',
@@ -136,15 +148,6 @@ const LUMA_EVENTS: EventData[] = [
     type: 'IRL',
     date: '2026-05-28',
     registrationUrl: 'https://luma.com/vmgryapo',
-  },
-  {
-    id: 'solana-summit-2026',
-    title: 'Solana Summit',
-    timeRange: 'TBA',
-    timezone: 'WAT',
-    community: 'TBA',
-    type: 'IRL',
-    date: '2026-08-08',
   },
   {
     id: 'luma-bitcoin-pizza-day-superteamng-owerri',
@@ -223,9 +226,11 @@ export const fetchEvents = async (): Promise<EventData[]> => {
     setTimeout(
       () =>
         resolve(
-          [...generateWeeklyEvents(RECURRING_EVENTS), ...LUMA_EVENTS].sort(
-            (a, b) => a.date.localeCompare(b.date),
-          ),
+          [
+            ...generateWeeklyEvents(RECURRING_EVENTS),
+            ...ONE_OFF_EVENTS,
+            ...LUMA_EVENTS,
+          ].sort((a, b) => a.date.localeCompare(b.date)),
         ),
       1500,
     );
