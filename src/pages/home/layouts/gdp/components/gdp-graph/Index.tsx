@@ -8,7 +8,7 @@ import {
   XAxis,
 } from "recharts";
 
-const gdpValues = [400000, 550000, 850000, 1300000];
+const gdpValues = [500000, 800000, 1200000, 1600000];
 
 const getRecentMonthLabels = (count: number) => {
   const currentMonth = new Date();
