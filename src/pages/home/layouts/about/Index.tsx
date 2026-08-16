@@ -80,12 +80,19 @@ const About = () => {
             <span className={`transition-colors duration-500 ${getRevealClass()}`}>
               by
             </span>{" "}
-            <span className={`transition-colors duration-500 ${getRevealClass()}`}>
-              Nzube
-            </span>{" "}
-            <span className={`transition-colors duration-500 ${getRevealClass()}`}>
-              Ezudo
-            </span>{" "}
+            <a
+              href="https://x.com/NzubeEzudo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-current decoration-1 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+                Nzube
+              </span>{" "}
+              <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+                Ezudo
+              </span>
+            </a>{" "}
             <img
               src={nzubeImg}
               alt=""
@@ -94,12 +101,19 @@ const About = () => {
             <span className={`transition-colors duration-500 ${getRevealClass()}`}>
               and
             </span>{" "}
-            <span className={`transition-colors duration-500 ${getRevealClass()}`}>
-              Harrison
-            </span>{" "}
-            <span className={`transition-colors duration-500 ${getRevealClass()}`}>
-              Obiefule
-            </span>{" "}
+            <a
+              href="https://x.com/Harri_obi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-current decoration-1 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+                Harrison
+              </span>{" "}
+              <span className={`transition-colors duration-500 ${getRevealClass()}`}>
+                Obiefule
+              </span>
+            </a>{" "}
             <img
               src={harrisonImg}
               alt=""
