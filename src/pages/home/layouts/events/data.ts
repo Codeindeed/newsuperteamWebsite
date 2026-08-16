@@ -16,6 +16,13 @@ interface RecurringEventData extends Omit<EventData, 'id' | 'date'> {
   weekday: number;
 }
 
+interface DateRangeRecurringEventData extends Omit<EventData, 'id' | 'date'> {
+  id: string;
+  weekdays: number[];
+  startDate: string;
+  endDate: string;
+}
+
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, '0');
@@ -51,6 +58,34 @@ const generateWeeklyEvents = (events: RecurringEventData[]) => {
         date,
       });
       currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return eventDates;
+  });
+};
+
+const parseDate = (value: string) => {
+  const [year, month, day] = value.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const generateDateRangeEvents = (events: DateRangeRecurringEventData[]) => {
+  return events.flatMap(({ startDate, endDate, weekdays, ...event }) => {
+    const currentDate = parseDate(startDate);
+    const lastDate = parseDate(endDate);
+    const eventDates: EventData[] = [];
+
+    while (currentDate <= lastDate) {
+      if (weekdays.includes(currentDate.getDay())) {
+        const date = formatDate(currentDate);
+        eventDates.push({
+          ...event,
+          id: `${event.id}-${date}`,
+          date,
+        });
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return eventDates;
@@ -105,6 +140,21 @@ const ONE_OFF_EVENTS: EventData[] = [
     community: 'TBA',
     type: 'IRL',
     date: '2026-08-08',
+  },
+];
+
+const DATE_RANGE_EVENTS: DateRangeRecurringEventData[] = [
+  {
+    id: 'luma-solana-school-fall-class',
+    title: 'Solana School: Fall Class',
+    timeRange: '2:00 PM - 3:30 PM',
+    timezone: 'WAT',
+    community: 'Online Event',
+    type: 'Virtual',
+    weekdays: [1, 3, 5],
+    startDate: '2026-08-31',
+    endDate: '2026-10-16',
+    registrationUrl: 'https://luma.com/jy1g8k90',
   },
 ];
 
@@ -228,6 +278,7 @@ export const fetchEvents = async (): Promise<EventData[]> => {
         resolve(
           [
             ...generateWeeklyEvents(RECURRING_EVENTS),
+            ...generateDateRangeEvents(DATE_RANGE_EVENTS),
             ...ONE_OFF_EVENTS,
             ...LUMA_EVENTS,
           ].sort((a, b) => a.date.localeCompare(b.date)),
