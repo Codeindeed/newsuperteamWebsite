@@ -11,6 +11,39 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: "8",
+    title: "SuperteamNG July Recap",
+    category: "Recap",
+    additionalTagsCount: 2,
+    author: "Superteam Nigeria",
+    date: "Aug 17, 2026",
+    imageUrl:
+      "https://substackcdn.com/image/fetch/$s_!W3hK!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc2277754-97ec-4e9d-ba39-3eac8f27b57d_4096x2730.jpeg",
+    url: "https://superteamng.substack.com/p/superteamng-july-recap",
+  },
+  {
+    id: "7",
+    title: "SuperteamNG June Recap",
+    category: "Recap",
+    additionalTagsCount: 2,
+    author: "Superteam Nigeria",
+    date: "Jul 1, 2026",
+    imageUrl:
+      "https://substackcdn.com/image/fetch/$s_!WoqY!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F0d5e7abb-f5cb-4ad1-b414-6a43f159522e_4096x2730.jpeg",
+    url: "https://superteamng.substack.com/p/superteamng-june-recap",
+  },
+  {
+    id: "6",
+    title: "SuperteamNG May Recap",
+    category: "Recap",
+    additionalTagsCount: 2,
+    author: "Superteam Nigeria",
+    date: "May 31, 2026",
+    imageUrl:
+      "https://substackcdn.com/image/fetch/$s_!L3bG!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F0915d878-1709-4f48-8d1d-d651610a37a9_4096x2730.jpeg",
+    url: "https://superteamng.substack.com/p/superteamng-may-recap",
+  },
+  {
     id: "1",
     title: "SuperteamNG April Recap",
     category: "Recap",
