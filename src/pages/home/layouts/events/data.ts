@@ -160,6 +160,16 @@ const DATE_RANGE_EVENTS: DateRangeRecurringEventData[] = [
 
 const LUMA_EVENTS: EventData[] = [
   {
+    id: 'luma-inside-solana-validators',
+    title: 'Inside Solana Validators',
+    timeRange: '4:00 PM - 6:00 PM',
+    timezone: 'WAT',
+    community: 'Café One Oregun, Ikeja, Lagos',
+    type: 'IRL',
+    date: '2026-08-22',
+    registrationUrl: 'https://luma.com/ehj2ahkk',
+  },
+  {
     id: 'luma-solana-ecosystem-call-delta',
     title: 'Solana Ecosystem Call - Delta',
     timeRange: '2:00 PM - 5:00 PM',
