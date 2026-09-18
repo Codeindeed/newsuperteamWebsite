@@ -160,6 +160,16 @@ const DATE_RANGE_EVENTS: DateRangeRecurringEventData[] = [
 
 const LUMA_EVENTS: EventData[] = [
   {
+    id: 'luma-pitch-clinic-2026-09-18',
+    title: 'Pitch Clinic',
+    timeRange: '6:00 PM - 8:00 PM',
+    timezone: 'WAT',
+    community: 'Google Meet',
+    type: 'Virtual',
+    date: '2026-09-18',
+    registrationUrl: 'https://luma.com/r1zw4vsj',
+  },
+  {
     id: 'luma-inside-solana-validators',
     title: 'Inside Solana Validators',
     timeRange: '4:00 PM - 6:00 PM',
