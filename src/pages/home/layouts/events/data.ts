@@ -205,6 +205,16 @@ const ONE_OFF_EVENTS: EventData[] = [
     date: '2026-10-09',
   },
   {
+    id: 'panta-api-sidetrack-deadline',
+    title: 'Panta API SideTrack — submission deadline',
+    timeRange: 'Hackathon deadline',
+    timezone: '',
+    community: 'Panta / Crypto World’s Fair',
+    type: 'Virtual',
+    date: '2026-10-12',
+    registrationUrl: 'https://superteam.fun/earn',
+  },
+  {
     id: 'solana-summit-2026',
     title: 'Solana Summit',
     timeRange: 'TBA',
