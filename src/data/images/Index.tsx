@@ -5,7 +5,6 @@ import members from "@/assets/graphics/members.svg";
 import solana from "@/assets/graphics/solana-2.svg";
 import product2 from "@/assets/graphics/product-2.svg";
 import product3 from "@/assets/graphics/product-3.svg";
-import product7 from "@/assets/graphics/product-7.svg";
 import product8 from "@/assets/graphics/product-8.svg";
 import product9 from "@/assets/graphics/product-9.jpg";
 import product10 from "@/assets/graphics/product-10.jpg";
@@ -31,7 +30,6 @@ export const solanaLogo = solana;
 export const productImages = [
   product2,
   product3,
-  product7,
   product8,
   product9,
   product10,
