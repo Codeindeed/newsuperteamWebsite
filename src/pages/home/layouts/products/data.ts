@@ -1,4 +1,3 @@
-import ribhImage from "@/assets/products/ribh.png";
 import airbillsImage from "@/assets/products/airbillspay.png";
 import nectarfiImage from "@/assets/products/nectarfi.png";
 import streamlinkImage from "@/assets/products/streamlink.png";
@@ -18,16 +17,6 @@ export interface ProductData {
 }
 
 export const MOCK_PRODUCTS: ProductData[] = [
-  {
-    id: "1",
-    name: "Ribh",
-    headline: "A Better Way to Collect Local Payments.",
-    pillColorClass: "#B17BF3",
-    pillBgClass: "bg-[#231039]",
-    bgRightClass: "bg-[#231039]",
-    image: ribhImage,
-    productUrl: "https://www.ribhfinance.com/",
-  },
   {
     id: "2",
     name: "Airbills",
