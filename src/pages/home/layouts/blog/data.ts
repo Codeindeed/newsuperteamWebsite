@@ -11,6 +11,28 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: "10",
+    title: "SuperteamNG September Recap",
+    category: "Recap",
+    additionalTagsCount: 2,
+    author: "Superteam Nigeria",
+    date: "Oct 5, 2026",
+    imageUrl:
+      "https://substackcdn.com/image/fetch/$s_!_YiG!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4d71e726-cf24-4344-aefc-1c7872b14698_4096x2730.jpeg",
+    url: "https://superteamng.substack.com/p/superteamng-september-recap",
+  },
+  {
+    id: "9",
+    title: "SuperteamNG August Recap",
+    category: "Recap",
+    additionalTagsCount: 2,
+    author: "Superteam Nigeria",
+    date: "Sep 4, 2026",
+    imageUrl:
+      "https://substackcdn.com/image/fetch/$s_!fmzZ!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F2c1a0db5-ef7e-44f5-86ed-063ec951dbe7_2048x1365.jpeg",
+    url: "https://superteamng.substack.com/p/superteamng-august-recap",
+  },
+  {
     id: "8",
     title: "SuperteamNG July Recap",
     category: "Recap",
