@@ -4,8 +4,6 @@ import {
   birdeyeLogo,
   cantinaLogo,
   carbiumLogo,
-  civicLogo,
-  copperxLogo,
   cypherEsimLogo,
   fluxrpcLogo,
   fyeoLogo,
@@ -115,16 +113,6 @@ export const partners: PartnerData[] = [
     logo: heliusLogo, // source: https://www.helius.dev/brand (Helius-Horizontal-Logo-White.svg)
   },
   {
-    id: "copperx",
-    name: "CopperX",
-    category: "Payments",
-    scope: "Global",
-    description: "Free physical card worth $100 and 0% off-ramp fees.",
-    url: "https://copperx.notion.site/Superteam-Earn-x-Copperx-Perks-2b984195480f80958f8dc64b101f7bcf",
-    logo: copperxLogo, // source: https://copperx.io/apple-touch-icon-144x144.png
-    logoStyle: "mark",
-  },
-  {
     id: "alchemy",
     name: "Alchemy",
     category: "Infrastructure",
@@ -216,16 +204,6 @@ export const partners: PartnerData[] = [
     description: "Free or discounted token vesting, airdrops and minting.",
     url: "https://drive.google.com/file/d/1H5r7g55UlWSB5TeBdZrdzITs5xkdKv1i/view?usp=sharing",
     logo: streamflowLogo, // source: https://streamflow.finance/ (site icon)
-    logoStyle: "avatar",
-  },
-  {
-    id: "civic",
-    name: "Civic",
-    category: "Tools",
-    scope: "Global",
-    description: "No SaaS fee for 12 months, first 1,000 verifications free.",
-    url: "https://civic.com/pass",
-    logo: civicLogo, // source: https://github.com/civicteam (official org avatar)
     logoStyle: "avatar",
   },
   {

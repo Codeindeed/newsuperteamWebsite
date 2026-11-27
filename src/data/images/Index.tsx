@@ -22,7 +22,6 @@ import speaker8 from "@/assets/gallery/speaker-08.jpg";
 import speaker9 from "@/assets/gallery/speaker-09.jpg";
 import speaker10 from "@/assets/gallery/speaker-10.jpg";
 import roam from "@/assets/partners/roam.svg";
-import copperx from "@/assets/partners/copperx.png";
 import alchemy from "@/assets/partners/alchemy.svg";
 import getblock from "@/assets/partners/getblock.svg";
 import birdeye from "@/assets/partners/birdeye-data.png";
@@ -34,7 +33,6 @@ import cantina from "@/assets/partners/cantina.svg";
 import adevarLabs from "@/assets/partners/adevar-labs.png";
 import webacy from "@/assets/partners/webacy.svg";
 import streamflow from "@/assets/partners/streamflow.png";
-import civic from "@/assets/partners/civic.png";
 import cypherEsim from "@/assets/partners/cypher-esim.png";
 import ryder from "@/assets/partners/ryder.svg";
 
@@ -66,7 +64,6 @@ export const galleryImages = [
   speaker10,
 ];
 export const roamLogo = roam;
-export const copperxLogo = copperx;
 export const alchemyLogo = alchemy;
 export const getblockLogo = getblock;
 export const birdeyeLogo = birdeye;
@@ -78,6 +75,5 @@ export const cantinaLogo = cantina;
 export const adevarLabsLogo = adevarLabs;
 export const webacyLogo = webacy;
 export const streamflowLogo = streamflow;
-export const civicLogo = civic;
 export const cypherEsimLogo = cypherEsim;
 export const ryderLogo = ryder;
