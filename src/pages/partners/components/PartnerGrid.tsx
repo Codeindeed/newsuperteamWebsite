@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { HiArrowUpRight } from "react-icons/hi2";
 import Button from "@/components/button/Index";
 import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
@@ -120,14 +120,14 @@ const PartnerGrid = () => {
               active={activeScope}
               onChange={handleScopeChange}
             />
-            <div className="self-stretch md:self-auto overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 pb-1 md:pb-0">
+            <ScrollableRow>
               <SegmentedFilter
                 label="Filter by category"
                 options={partnerFilters}
                 active={activeFilter}
                 onChange={handleFilterChange}
               />
-            </div>
+            </ScrollableRow>
           </div>
         </div>
 
@@ -176,6 +176,76 @@ const PartnerGrid = () => {
 };
 
 export default PartnerGrid;
+
+interface ScrollableRowProps {
+  children: ReactNode;
+}
+
+// Lets a wide control scroll sideways on narrow screens: the row bleeds to
+// the viewport edges, keeps a 16px gutter at both ends, hides the scrollbar
+// and fades whichever edge still has content behind it. On wider screens
+// the content fits, so the fades stay hidden and the control is centred.
+const ScrollableRow = ({ children }: ScrollableRowProps) => {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: false, end: false });
+
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+
+    const updateEdges = () => {
+      const maxScrollLeft = row.scrollWidth - row.clientWidth;
+      setEdges({
+        start: row.scrollLeft > 1,
+        end: row.scrollLeft < maxScrollLeft - 1,
+      });
+    };
+
+    updateEdges();
+    row.addEventListener("scroll", updateEdges, { passive: true });
+    window.addEventListener("resize", updateEdges);
+
+    // Re-measure when the row or its content changes size (fonts loading,
+    // viewport changes that do not fire a window resize).
+    const ResizeObserverCtor = window.ResizeObserver;
+    const observer = ResizeObserverCtor
+      ? new ResizeObserverCtor(updateEdges)
+      : null;
+    observer?.observe(row);
+    Array.from(row.children).forEach((child) => observer?.observe(child));
+
+    return () => {
+      row.removeEventListener("scroll", updateEdges);
+      window.removeEventListener("resize", updateEdges);
+      observer?.disconnect();
+    };
+  }, []);
+
+  const fade =
+    "pointer-events-none absolute inset-y-0 w-12 transition-opacity duration-500 md:hidden";
+
+  return (
+    <div className="relative self-stretch md:self-auto -mx-4 md:mx-0">
+      <div ref={rowRef} className="flex overflow-x-auto scrollbar-hide">
+        <span aria-hidden="true" className="w-4 shrink-0 md:hidden" />
+        <div className="shrink-0 mx-auto">{children}</div>
+        <span aria-hidden="true" className="w-4 shrink-0 md:hidden" />
+      </div>
+      <div
+        aria-hidden="true"
+        className={`${fade} left-0 bg-gradient-to-r from-[#0F0F0F] to-transparent ${
+          edges.start ? "opacity-100" : "opacity-0"
+        }`}
+      />
+      <div
+        aria-hidden="true"
+        className={`${fade} right-0 bg-gradient-to-l from-[#0F0F0F] to-transparent ${
+          edges.end ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </div>
+  );
+};
 
 interface SegmentedFilterProps<T extends string> {
   label: string;
@@ -229,27 +299,27 @@ const PartnerCard = ({ partner }: PartnerCardProps) => {
       rel="noreferrer"
       className="bg-black rounded-[24px] border border-white/5 p-6 md:p-8 flex flex-col h-full group cursor-pointer transition-all duration-500 hover:border-white/10"
     >
-      {/* Logo + scope/category pills */}
-      <div className="flex items-start justify-between gap-4">
+      {/* Logo, then the scope/category pills on their own row */}
+      <div className="flex">
         <PartnerLogo partner={partner} />
-        <div className="flex flex-wrap justify-end gap-2">
-          <span
-            className={`text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap ${
-              partner.scope === "Local"
-                ? "bg-[#131E19] text-[#00AD66]"
-                : "bg-[#1A1A1A] border border-[#333] text-[#aaa]"
-            }`}
-          >
-            {partner.scope}
-          </span>
-          <span className="bg-[#131E19] text-[#00AD66] text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap">
-            {partner.category}
-          </span>
-        </div>
+      </div>
+      <div className="flex flex-wrap gap-2 mt-5">
+        <span
+          className={`text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap ${
+            partner.scope === "Local"
+              ? "bg-[#131E19] text-[#00AD66]"
+              : "bg-[#1A1A1A] border border-[#333] text-[#aaa]"
+          }`}
+        >
+          {partner.scope}
+        </span>
+        <span className="bg-[#131E19] text-[#00AD66] text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap">
+          {partner.category}
+        </span>
       </div>
 
       {/* Name + description */}
-      <h3 className="text-white text-body-3 !font-medium mt-6 group-hover:text-primary transition-colors duration-500">
+      <h3 className="text-white text-body-3 !font-medium mt-5 group-hover:text-primary transition-colors duration-500">
         {partner.name}
       </h3>
       <p className="text-[#525252] text-body-5 leading-[1.5] mt-2 group-hover:text-[#aaa] transition-colors duration-500">
