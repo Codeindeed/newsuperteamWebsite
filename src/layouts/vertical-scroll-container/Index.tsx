@@ -1,53 +1,12 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Navigation from "../navigation/Index";
+import { getSectionTop, ScrollContext } from "./context";
 
-interface ScrollContextType {
-  containerRef: React.RefObject<HTMLDivElement> | null;
-}
-
-const ScrollContext = createContext<ScrollContextType>({ containerRef: null });
-
-export const useScrollContainer = () => useContext(ScrollContext);
-
-// Top of the section holding `id`, measured from the untransformed section
-// wrapper so the scroll-linked scale on the inner content cannot throw it
-// off. Null when the element is not in the DOM yet.
-export const getSectionTop = (container: HTMLDivElement, id: string) => {
-  const target = document.getElementById(id);
-  if (!target) return null;
-
-  const wrapper = Array.from(container.children).find((child) =>
-    child.contains(target),
-  );
-  const anchor = (wrapper as HTMLElement | undefined) ?? target;
-  const top =
-    anchor.getBoundingClientRect().top -
-    container.getBoundingClientRect().top +
-    container.scrollTop;
-
-  return Math.max(0, Math.round(top));
-};
-
-// Scrolls the page container so that section sits right under the
-// navigation bar. Returns false when the element is not in the DOM yet.
-export const scrollToSection = (
-  container: HTMLDivElement,
-  id: string,
-  behavior: ScrollBehavior = "smooth",
-) => {
-  const top = getSectionTop(container, id);
-  if (top === null) return false;
-  container.scrollTo({ top, behavior });
-  return true;
-};
+// Pages keep importing these from here. Anything rendered by Navigation
+// (the mobile menu, SiteLink) must import them from "./context" instead, or
+// the import graph turns into a cycle again.
+export { getSectionTop, scrollToSection, useScrollContainer } from "./context";
 
 interface ScrollSectionProps {
   children: ReactNode;

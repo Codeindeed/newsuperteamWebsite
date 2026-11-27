@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 import Button from "@/components/button/Index";
 import SiteLink from "@/components/site-link/Index";
 import { communityUrl, siteLinks, socialLinks } from "@/data/navigation/Index";
-import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
+import { useScrollContainer } from "@/layouts/vertical-scroll-container/context";
 
 interface MobileMenuProps {
   id: string;
@@ -19,22 +19,35 @@ interface MobileMenuProps {
   toggleRef: RefObject<HTMLButtonElement>;
 }
 
-// Matches the fade-out duration below so the sheet unmounts after it hides.
+// Matches the fade-out duration below so the sheet hides after it fades.
 const CLOSE_DURATION_MS = 500;
+
+const TABBABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// Keyboard-reachable elements under `root`, in DOM order, skipping anything
+// that is not rendered.
+const getTabbables = (root: HTMLElement) =>
+  Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter(
+    (element) => element.tabIndex >= 0 && element.getClientRects().length > 0,
+  );
 
 // Full-screen top sheet below lg, portalled to <body> like the gallery
 // modal. Every entry is a SiteLink, so section links navigate client-side
-// and scroll the page container, exactly as the footer does.
+// and scroll the page container, exactly as the footer does. The sheet stays
+// mounted (hidden) while closed so the toggle's aria-controls always points
+// at a real element.
 const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
   const location = useLocation();
   const { containerRef } = useScrollContainer();
   const [rendered, setRendered] = useState(false);
   const [visible, setVisible] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const firstItemRef = useRef<HTMLAnchorElement>(null);
   const wasOpenRef = useRef(false);
 
-  // Mount, then fade in a beat later so the transition runs; fade out, then
-  // unmount.
+  // Show, then fade in a beat later so the transition runs; fade out, then
+  // hide.
   useEffect(() => {
     if (open) {
       setRendered(true);
@@ -51,7 +64,10 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
   }, [open]);
 
   // While open: lock the page container (the window never scrolls, the
-  // container does) and close on Escape.
+  // container does), close on Escape and keep Tab inside the menu. The
+  // toggle in the navigation bar stays visible above the overlay and is the
+  // menu's close button, so it is part of the Tab cycle; the page content
+  // underneath is not.
   useEffect(() => {
     if (!open) return;
 
@@ -70,7 +86,39 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
     }
 
     const handleKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const sheet = sheetRef.current;
+      if (!sheet) return;
+
+      const toggle = toggleRef.current;
+      const tabbables = [
+        ...(toggle ? [toggle] : []),
+        ...getTabbables(sheet),
+      ];
+      if (tabbables.length === 0) return;
+
+      // The toggle sits in the nav bar, with the whole page between it and
+      // the portalled sheet in DOM order, so every Tab step is handled here
+      // rather than only the wrap-around at the ends.
+      const active = document.activeElement;
+      const index =
+        active instanceof HTMLElement ? tabbables.indexOf(active) : -1;
+      const lastIndex = tabbables.length - 1;
+      const next = event.shiftKey
+        ? index <= 0
+          ? lastIndex
+          : index - 1
+        : index === -1 || index === lastIndex
+          ? 0
+          : index + 1;
+
+      event.preventDefault();
+      tabbables[next].focus();
     };
     document.addEventListener("keydown", handleKeydown);
 
@@ -85,7 +133,7 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
 
       document.removeEventListener("keydown", handleKeydown);
     };
-  }, [containerRef, onClose, open]);
+  }, [containerRef, onClose, open, toggleRef]);
 
   // Focus the first item once the sheet is showing; hand focus back to the
   // toggle when it closes.
@@ -103,8 +151,6 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
       toggleRef.current?.focus();
     }
   }, [open, toggleRef]);
-
-  if (!rendered) return null;
 
   const isCurrent = (url: string) => {
     if (url.startsWith("/#")) {
@@ -126,10 +172,12 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
 
   return createPortal(
     <div
+      ref={sheetRef}
       id={id}
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
+      hidden={!rendered}
       className={`fixed inset-0 z-[90] lg:hidden overflow-y-auto transition-opacity duration-500 ease-out ${
         visible ? "opacity-100" : "opacity-0"
       }`}

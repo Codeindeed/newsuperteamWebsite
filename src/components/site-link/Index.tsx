@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import {
   scrollToSection,
   useScrollContainer,
-} from "@/layouts/vertical-scroll-container/Index";
+} from "@/layouts/vertical-scroll-container/context";
 
 interface SiteLinkProps {
   url: string;
