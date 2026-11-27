@@ -72,7 +72,9 @@ export default function SplashCursor({
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 20, stiffness: 150 };
+  // Ring trails the pointer by ~30px at 600px/s and settles in under 100ms
+  // (damping ratio ~0.9, so it does not overshoot). The dot is not sprung.
+  const springConfig = { damping: 75, stiffness: 1800 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
 
@@ -1554,8 +1556,8 @@ export default function SplashCursor({
       <motion.div
         className="fixed top-0 left-0 w-2 h-2 bg-[#00AD66]/20 rounded-full z-[10000]"
         style={{
-          x: cursorX,
-          y: cursorY,
+          x: mouseX,
+          y: mouseY,
           translateX: "-50%",
           translateY: "-50%",
         }}
