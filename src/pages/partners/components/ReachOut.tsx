@@ -1,10 +1,12 @@
 import { FaXTwitter } from "react-icons/fa6";
 import Button from "@/components/button/Index";
+import { membersImg } from "@/data/images/Index";
 import { contact } from "../data";
 
-// Same three figures as the homepage stat cards.
+// Same three figures as the homepage stat cards; the members card reuses
+// the homepage members graphic.
 const stats = [
-  { id: "members", value: "7k+", label: "Members" },
+  { id: "members", value: "7k+", label: "Members", image: membersImg },
   { id: "products", value: "200+", label: "Products built on Solana" },
   { id: "states", value: "30", label: "States in Nigeria" },
 ];
@@ -30,10 +32,22 @@ const ReachOut = () => {
           {stats.map((stat) => (
             <div
               key={stat.id}
-              className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-6 text-left text-heading-7 md:text-heading-6 md:!text-[25px] !font-medium hover:border-white/10 transition-colors duration-500"
+              className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-6 text-left flex flex-col justify-between gap-6 hover:border-white/10 transition-colors duration-500"
             >
-              <div className="text-white">{stat.value}</div>
-              <div className="text-[#5F5F5F]">{stat.label}</div>
+              <div className="h-9 flex items-center">
+                {stat.image && (
+                  <img
+                    src={stat.image}
+                    alt=""
+                    className="h-9 w-auto object-contain"
+                    draggable={false}
+                  />
+                )}
+              </div>
+              <div className="text-heading-7 md:text-heading-6 md:!text-[25px] !font-medium">
+                <div className="text-white">{stat.value}</div>
+                <div className="text-[#5F5F5F]">{stat.label}</div>
+              </div>
             </div>
           ))}
         </div>

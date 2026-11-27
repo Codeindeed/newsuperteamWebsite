@@ -150,14 +150,9 @@ const PartnerCard = ({ partner }: PartnerCardProps) => {
       rel="noreferrer"
       className="bg-black rounded-[24px] border border-white/5 p-6 md:p-8 flex flex-col h-full group cursor-pointer transition-all duration-500 hover:border-white/10"
     >
-      {/* Avatar + category */}
+      {/* Logo + category */}
       <div className="flex items-start justify-between gap-4">
-        <div
-          aria-hidden="true"
-          className="w-12 h-12 shrink-0 rounded-full bg-[#1A1A1A] border border-[#333] flex items-center justify-center text-body-3 font-medium text-white group-hover:text-primary transition-colors duration-500"
-        >
-          {partner.name.charAt(0)}
-        </div>
+        <PartnerLogo partner={partner} />
         <span className="bg-[#131E19] text-[#00AD66] text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap">
           {partner.category}
         </span>
@@ -181,5 +176,60 @@ const PartnerCard = ({ partner }: PartnerCardProps) => {
         </span>
       </div>
     </a>
+  );
+};
+
+interface PartnerLogoProps {
+  partner: PartnerData;
+}
+
+// Logo slot: a neutral pill/circle in the house style. Falls back to the
+// partner's initial when no logo is registered. The card title already
+// carries the name, so the image itself is decorative.
+const PartnerLogo = ({ partner }: PartnerLogoProps) => {
+  const tile =
+    "shrink-0 rounded-full bg-[#1A1A1A] border border-[#333] transition-colors duration-500 group-hover:border-white/20";
+
+  if (!partner.logo) {
+    return (
+      <div
+        aria-hidden="true"
+        className={`${tile} w-12 h-12 flex items-center justify-center text-body-3 font-medium text-white group-hover:text-primary`}
+      >
+        {partner.name.charAt(0)}
+      </div>
+    );
+  }
+
+  if (partner.logoStyle === "avatar") {
+    return (
+      <img
+        src={partner.logo}
+        alt=""
+        className={`${tile} w-12 h-12 object-cover`}
+      />
+    );
+  }
+
+  if (partner.logoStyle === "mark") {
+    return (
+      <div className={`${tile} w-12 h-12 flex items-center justify-center p-2.5`}>
+        <img
+          src={partner.logo}
+          alt=""
+          className="w-full h-full object-contain"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${tile} h-12 px-4 flex items-center`}>
+      <img
+        src={partner.logo}
+        alt=""
+        className="h-5 w-auto max-w-[140px] object-contain"
+      />
+    </div>
   );
 };

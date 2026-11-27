@@ -1,3 +1,22 @@
+import {
+  adevarLabsLogo,
+  alchemyLogo,
+  birdeyeLogo,
+  cantinaLogo,
+  carbiumLogo,
+  civicLogo,
+  copperxLogo,
+  cypherEsimLogo,
+  fluxrpcLogo,
+  fyeoLogo,
+  getblockLogo,
+  heliusLogo,
+  roamLogo,
+  ryderLogo,
+  streamflowLogo,
+  webacyLogo,
+} from "@/data/images/Index";
+
 export type PartnerCategory =
   | "Payments"
   | "Infrastructure"
@@ -6,12 +25,22 @@ export type PartnerCategory =
 
 export type PartnerFilter = "All" | PartnerCategory;
 
+// How a logo sits in the card's logo slot:
+// - "lockup": a wide wordmark or lockup shown inside a pill (default)
+// - "avatar": a square image with its own background, cropped to a circle
+// - "mark": a symbol on a transparent background, padded inside the circle
+export type PartnerLogoStyle = "lockup" | "avatar" | "mark";
+
 export interface PartnerData {
   id: string;
   name: string;
   category: PartnerCategory;
   description: string;
   url: string;
+  // Registry const from "@/data/images/Index". Cards fall back to an
+  // initial-letter avatar when it is missing.
+  logo?: string;
+  logoStyle?: PartnerLogoStyle;
 }
 
 export interface PerkData {
@@ -50,7 +79,8 @@ export const partnerFilters: PartnerFilter[] = [
   "Tools",
 ];
 
-// Logos are intentionally absent: cards render a name-only initial avatar.
+// Logo files live in src/assets/partners and are registered in
+// src/data/images/Index.tsx; never point `logo` at a third-party URL.
 export const partners: PartnerData[] = [
   {
     id: "roam",
@@ -59,6 +89,7 @@ export const partners: PartnerData[] = [
     description:
       "Receive USDC, USDT and PYUSD on Solana, convert 1:1 with zero conversion fees, withdraw to Naira.",
     url: "https://withroam.app/",
+    logo: roamLogo, // source: https://withroam.app/ (header logo, dark-theme variant)
   },
   {
     id: "copperx",
@@ -66,6 +97,8 @@ export const partners: PartnerData[] = [
     category: "Payments",
     description: "Free physical card worth $100 and 0% off-ramp fees.",
     url: "https://copperx.notion.site/Superteam-Earn-x-Copperx-Perks-2b984195480f80958f8dc64b101f7bcf",
+    logo: copperxLogo, // source: https://copperx.io/apple-touch-icon-144x144.png
+    logoStyle: "mark",
   },
   {
     id: "alchemy",
@@ -73,6 +106,7 @@ export const partners: PartnerData[] = [
     category: "Infrastructure",
     description: "Priority access to up to $25k credits plus 15% extra.",
     url: "https://www.alchemy.com/solana-20m-fund",
+    logo: alchemyLogo, // source: https://www.alchemy.com/brand (brand kit, Logo/White)
   },
   {
     id: "getblock",
@@ -80,6 +114,7 @@ export const partners: PartnerData[] = [
     category: "Infrastructure",
     description: "Up to $10,000 in credits for 90 days.",
     url: "https://getblock.io/grant-program-solana/",
+    logo: getblockLogo, // source: https://getblock.io/media-kit/ (brand kit, Logotype/White)
   },
   {
     id: "birdeye-data",
@@ -87,6 +122,7 @@ export const partners: PartnerData[] = [
     category: "Infrastructure",
     description: "24M CUs, about 3 months of Starter; until May 31, 2027.",
     url: "https://docs.google.com/forms/d/e/1FAIpQLSeBQANnvT4wFc20RcrhG0J5xwjFpsQvACfO_lpc9Xus7GqRQA/viewform",
+    logo: birdeyeLogo, // source: https://docs.birdeye.so/docs/brand-assets (Drive folder, horizontal white)
   },
   {
     id: "carbium",
@@ -94,6 +130,7 @@ export const partners: PartnerData[] = [
     category: "Infrastructure",
     description: "6 months free and 10% off for life.",
     url: "https://www.carbium.io/partnership",
+    logo: carbiumLogo, // source: https://www.carbium.io/mainLogo.png, inverted to white as carbium.io does
   },
   {
     id: "fluxrpc",
@@ -101,6 +138,17 @@ export const partners: PartnerData[] = [
     category: "Infrastructure",
     description: "20% off any plan, permanently.",
     url: "https://superteam.fun/earn/pro",
+    logo: fluxrpcLogo, // source: https://fluxrpc.com/logo.png
+    logoStyle: "avatar",
+  },
+  {
+    id: "helius",
+    name: "Helius",
+    category: "Infrastructure",
+    description:
+      "30% off RPC for Superteam members; verify with your Member NFT in the Helius Discord.",
+    url: "https://www.helius.dev/",
+    logo: heliusLogo, // source: https://www.helius.dev/brand (Helius-Horizontal-Logo-White.svg)
   },
   {
     id: "fyeo",
@@ -108,6 +156,8 @@ export const partners: PartnerData[] = [
     category: "Security",
     description: "40% off audits, threat monitoring and wallet testing.",
     url: "https://www.fyeo.io/superteam-partnership",
+    logo: fyeoLogo, // source: https://github.com/fyeo-io (official org avatar; fyeo.io has no logo file)
+    logoStyle: "avatar",
   },
   {
     id: "cantina",
@@ -115,6 +165,7 @@ export const partners: PartnerData[] = [
     category: "Security",
     description: "15% off audits plus 1 year free bug bounty hosting.",
     url: "https://cantina.xyz/introduction/cantina-superteam",
+    logo: cantinaLogo, // source: https://www.cantina.security/ (header wordmark)
   },
   {
     id: "adevar-labs",
@@ -122,6 +173,8 @@ export const partners: PartnerData[] = [
     category: "Security",
     description: "25% off audits, formal verification and fuzzing.",
     url: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2L9GdTZOwwVLrZ_hXxPjlW-ryfKJc3YAz2qFH7CDlcDOkNXioHide4yKo_K72-jbqMdGfaPT_3",
+    logo: adevarLabsLogo, // source: https://github.com/AdevarLabs (official org avatar)
+    logoStyle: "avatar",
   },
   {
     id: "webacy",
@@ -129,6 +182,7 @@ export const partners: PartnerData[] = [
     category: "Security",
     description: "50% off Pro Plan for life.",
     url: "https://dapp.webacy.com/",
+    logo: webacyLogo, // source: https://www.webacy.com/ (header white logo)
   },
   {
     id: "streamflow",
@@ -136,6 +190,8 @@ export const partners: PartnerData[] = [
     category: "Tools",
     description: "Free or discounted token vesting, airdrops and minting.",
     url: "https://drive.google.com/file/d/1H5r7g55UlWSB5TeBdZrdzITs5xkdKv1i/view?usp=sharing",
+    logo: streamflowLogo, // source: https://streamflow.finance/ (site icon)
+    logoStyle: "avatar",
   },
   {
     id: "civic",
@@ -143,6 +199,8 @@ export const partners: PartnerData[] = [
     category: "Tools",
     description: "No SaaS fee for 12 months, first 1,000 verifications free.",
     url: "https://civic.com/pass",
+    logo: civicLogo, // source: https://github.com/civicteam (official org avatar)
+    logoStyle: "avatar",
   },
   {
     id: "cypher-esim",
@@ -150,6 +208,8 @@ export const partners: PartnerData[] = [
     category: "Tools",
     description: "30% off eSIM, 50% off VPN, pay in SOL or USDC.",
     url: "https://superteam.cypheresim.com/",
+    logo: cypherEsimLogo, // source: https://cypheresim.com/logo.png
+    logoStyle: "avatar",
   },
   {
     id: "ryder",
@@ -157,6 +217,7 @@ export const partners: PartnerData[] = [
     category: "Tools",
     description: "30% off hardware wallets.",
     url: "https://ryder.id",
+    logo: ryderLogo, // source: https://ryder.id/ (ryder_logo_light.svg)
   },
 ];
 
