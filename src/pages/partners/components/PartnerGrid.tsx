@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { HiArrowUpRight } from "react-icons/hi2";
+import Button from "@/components/button/Index";
 import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
 import {
   fetchPartners,
   PartnerData,
   PartnerFilter,
   partnerFilters,
+  ScopeFilter,
+  scopeFilters,
 } from "../data";
 
 const PartnerGrid = () => {
@@ -13,6 +16,7 @@ const PartnerGrid = () => {
   const { containerRef } = useScrollContainer();
   const [partners, setPartners] = useState<PartnerData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeScope, setActiveScope] = useState<ScopeFilter>("All");
   const [activeFilter, setActiveFilter] = useState<PartnerFilter>("All");
 
   useEffect(() => {
@@ -25,20 +29,23 @@ const PartnerGrid = () => {
     loadData();
   }, []);
 
+  // Both filters combine, e.g. Local + Payments.
   const filteredPartners = useMemo(
     () =>
-      activeFilter === "All"
-        ? partners
-        : partners.filter((partner) => partner.category === activeFilter),
-    [activeFilter, partners],
+      partners.filter(
+        (partner) =>
+          (activeScope === "All" || partner.scope === activeScope) &&
+          (activeFilter === "All" || partner.category === activeFilter),
+      ),
+    [activeFilter, activeScope, partners],
   );
 
-  const handleFilterChange = (filter: PartnerFilter) => {
-    setActiveFilter(filter);
+  const hasActiveFilters = activeScope !== "All" || activeFilter !== "All";
 
-    // The window never scrolls; the page container does. If the reader is
-    // deep inside the grid, bring the section top back so the new results
-    // are in view.
+  // The window never scrolls; the page container does. If the reader is
+  // deep inside the grid when a filter changes, bring the section top back
+  // so the new results are in view.
+  const bringSectionIntoView = () => {
     const container = containerRef?.current;
     const section = sectionRef.current;
     if (!container || !section) return;
@@ -52,6 +59,31 @@ const PartnerGrid = () => {
     if (container.scrollTop > sectionTop + 1) {
       container.scrollTo({ top: sectionTop, behavior: "smooth" });
     }
+  };
+
+  const handleScopeChange = (scope: ScopeFilter) => {
+    setActiveScope(scope);
+    bringSectionIntoView();
+  };
+
+  const handleFilterChange = (filter: PartnerFilter) => {
+    setActiveFilter(filter);
+    bringSectionIntoView();
+  };
+
+  const resetFilters = () => {
+    setActiveScope("All");
+    setActiveFilter("All");
+    bringSectionIntoView();
+  };
+
+  const emptyHint = () => {
+    if (activeScope !== "All" && activeFilter !== "All") {
+      return `No ${activeScope} partners in ${activeFilter} yet.`;
+    }
+    if (activeScope !== "All") return `No ${activeScope} partners yet.`;
+    if (activeFilter !== "All") return `No ${activeFilter} partners yet.`;
+    return "Partner products will show here as soon as they are added.";
   };
 
   return (
@@ -75,28 +107,26 @@ const PartnerGrid = () => {
             </span>
           </h2>
           <p className="text-[#525252] text-body-4 mt-4 max-w-[480px]">
-            Credits, discounts and tools from teams we work with. Pick a
-            category to narrow it down.
+            Credits, discounts and tools from teams we work with. Local perks
+            come from Superteam Nigeria partnerships, Global ones from the
+            wider Superteam network.
           </p>
 
-          {/* Category filter */}
-          <div className="self-stretch overflow-x-auto scrollbar-hide mt-10 pb-1 -mx-4 px-4 md:mx-0 md:px-0">
-            <div className="flex items-center gap-1 bg-[#1F1F1F] border border-[#2B2B2B] p-1 rounded-full w-max mx-auto">
-              {partnerFilters.map((filter) => (
-                <button
-                  key={filter}
-                  type="button"
-                  aria-pressed={activeFilter === filter}
-                  onClick={() => handleFilterChange(filter)}
-                  className={`relative overflow-hidden px-4 md:px-6 py-2.5 md:py-3 rounded-full text-body-5 md:text-body-4 whitespace-nowrap transition-colors duration-700 before:absolute before:inset-y-1 before:left-1 before:rounded-full before:bg-[#000000] before:content-[''] before:transition-all before:duration-700 ${
-                    activeFilter === filter
-                      ? "text-white before:w-[calc(100%-8px)]"
-                      : "text-[#6F6F6F] before:w-0 hover:text-white hover:before:w-[calc(100%-8px)]"
-                  }`}
-                >
-                  <span className="relative z-[1]">{filter}</span>
-                </button>
-              ))}
+          {/* Scope + category filters */}
+          <div className="self-stretch flex flex-col md:flex-row md:flex-wrap items-center justify-center gap-3 md:gap-4 mt-10">
+            <SegmentedFilter
+              label="Filter by scope"
+              options={scopeFilters}
+              active={activeScope}
+              onChange={handleScopeChange}
+            />
+            <div className="self-stretch md:self-auto overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 pb-1 md:pb-0">
+              <SegmentedFilter
+                label="Filter by category"
+                options={partnerFilters}
+                active={activeFilter}
+                onChange={handleFilterChange}
+              />
             </div>
           </div>
         </div>
@@ -114,15 +144,24 @@ const PartnerGrid = () => {
               ))}
           </div>
         ) : filteredPartners.length === 0 ? (
-          <div className="min-h-[320px] rounded-lg border border-white/10 bg-black flex flex-col items-center justify-center text-center px-6">
+          <div className="min-h-[320px] rounded-lg border border-white/10 bg-black flex flex-col items-center justify-center text-center px-6 py-12">
             <p className="text-heading-7 text-white !font-medium">
-              No partners yet
+              {hasActiveFilters ? "No partners found" : "No partners yet"}
             </p>
             <p className="text-body-5 text-[#525252] mt-2 max-w-[360px]">
-              {activeFilter === "All"
-                ? "Partner products will show here as soon as they are added."
-                : `${activeFilter} partners will show here as soon as they are added.`}
+              {emptyHint()}
+              {hasActiveFilters && " Try another filter."}
             </p>
+            {hasActiveFilters && (
+              <Button
+                type="primary"
+                buttonType="button"
+                onClick={resetFilters}
+                className="mt-8"
+              >
+                Show all partners
+              </Button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -138,6 +177,46 @@ const PartnerGrid = () => {
 
 export default PartnerGrid;
 
+interface SegmentedFilterProps<T extends string> {
+  label: string;
+  options: T[];
+  active: T;
+  onChange: (option: T) => void;
+}
+
+// Gallery filter recipe: raised pill container, black sliding pill behind
+// the active option.
+const SegmentedFilter = <T extends string>({
+  label,
+  options,
+  active,
+  onChange,
+}: SegmentedFilterProps<T>) => {
+  return (
+    <div
+      role="group"
+      aria-label={label}
+      className="flex items-center gap-1 bg-[#1F1F1F] border border-[#2B2B2B] p-1 rounded-full w-max mx-auto"
+    >
+      {options.map((option) => (
+        <button
+          key={option}
+          type="button"
+          aria-pressed={active === option}
+          onClick={() => onChange(option)}
+          className={`relative overflow-hidden px-4 md:px-6 py-2.5 md:py-3 rounded-full text-body-5 md:text-body-4 whitespace-nowrap transition-colors duration-700 before:absolute before:inset-y-1 before:left-1 before:rounded-full before:bg-[#000000] before:content-[''] before:transition-all before:duration-700 ${
+            active === option
+              ? "text-white before:w-[calc(100%-8px)]"
+              : "text-[#6F6F6F] before:w-0 hover:text-white hover:before:w-[calc(100%-8px)]"
+          }`}
+        >
+          <span className="relative z-[1]">{option}</span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
 interface PartnerCardProps {
   partner: PartnerData;
 }
@@ -150,12 +229,23 @@ const PartnerCard = ({ partner }: PartnerCardProps) => {
       rel="noreferrer"
       className="bg-black rounded-[24px] border border-white/5 p-6 md:p-8 flex flex-col h-full group cursor-pointer transition-all duration-500 hover:border-white/10"
     >
-      {/* Logo + category */}
+      {/* Logo + scope/category pills */}
       <div className="flex items-start justify-between gap-4">
         <PartnerLogo partner={partner} />
-        <span className="bg-[#131E19] text-[#00AD66] text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap">
-          {partner.category}
-        </span>
+        <div className="flex flex-wrap justify-end gap-2">
+          <span
+            className={`text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap ${
+              partner.scope === "Local"
+                ? "bg-[#131E19] text-[#00AD66]"
+                : "bg-[#1A1A1A] border border-[#333] text-[#aaa]"
+            }`}
+          >
+            {partner.scope}
+          </span>
+          <span className="bg-[#131E19] text-[#00AD66] text-body-5 font-medium px-3 py-1.5 rounded-full whitespace-nowrap">
+            {partner.category}
+          </span>
+        </div>
       </div>
 
       {/* Name + description */}
