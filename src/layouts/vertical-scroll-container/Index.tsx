@@ -1,21 +1,12 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Navigation from "../navigation/Index";
+import { getSectionTop, ScrollContext } from "./context";
 
-interface ScrollContextType {
-  containerRef: React.RefObject<HTMLDivElement> | null;
-}
-
-const ScrollContext = createContext<ScrollContextType>({ containerRef: null });
-
-export const useScrollContainer = () => useContext(ScrollContext);
+// Pages keep importing these from here. Anything rendered by Navigation
+// (the mobile menu, SiteLink) must import them from "./context" instead, or
+// the import graph turns into a cycle again.
+export { getSectionTop, scrollToSection, useScrollContainer } from "./context";
 
 interface ScrollSectionProps {
   children: ReactNode;
@@ -139,28 +130,94 @@ const VerticalScrollContainer: React.FC<VerticalScrollContainerProps> = ({
     containerHeight: typeof window !== "undefined" ? window.innerHeight : 0,
   });
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastHandledPathRef = useRef<string | null>(null);
 
   const sections = React.Children.toArray(children);
 
+  // Hash handling. A hash change within the page scrolls smoothly; a fresh
+  // mount (direct load, or a client-side route change into this page) jumps
+  // straight to the section ("instant", because "auto" would follow the
+  // container's scroll-smooth class). Either way the section is followed for
+  // a moment afterwards: the homepage loads lazily, images, fonts and data
+  // can still shift the layout, and a long smooth scroll can be cut short.
+  // The follow-up stops as soon as the reader takes over, and the "handled"
+  // path is recorded only after a scroll actually ran, so StrictMode's double
+  // effect run cannot turn the first jump into an animation.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    window.requestAnimationFrame(() => {
-      if (!location.hash) {
-        container.scrollTo({ top: 0, left: 0 });
+    if (!location.hash) {
+      container.scrollTo({ top: 0, left: 0 });
+      lastHandledPathRef.current = location.pathname;
+      return;
+    }
+
+    const id = location.hash.slice(1);
+    const withinPage = lastHandledPathRef.current === location.pathname;
+    const start = performance.now();
+    const inputEvents = ["wheel", "touchstart", "pointerdown"] as const;
+    let interrupted = false;
+    let frame = 0;
+    let scrolledTo: number | null = null;
+    let lastTop = container.scrollTop;
+    let stableSince = start;
+
+    const markInterrupted = () => {
+      interrupted = true;
+    };
+    inputEvents.forEach((type) =>
+      container.addEventListener(type, markInterrupted, { passive: true }),
+    );
+    window.addEventListener("keydown", markInterrupted);
+
+    const tick = () => {
+      const now = performance.now();
+      const target = getSectionTop(container, id);
+
+      if (scrolledTo === null) {
+        // Waiting for the section to exist.
+        if (target === null) {
+          if (now - start < 3000) frame = window.requestAnimationFrame(tick);
+          return;
+        }
+        container.scrollTo({
+          top: target,
+          behavior: withinPage ? "smooth" : "instant",
+        });
+        scrolledTo = target;
+        lastHandledPathRef.current = location.pathname;
+        lastTop = container.scrollTop;
+        stableSince = now;
+        frame = window.requestAnimationFrame(tick);
         return;
       }
 
-      const target = document.getElementById(location.hash.slice(1));
-      if (target) {
-        try {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        } catch {
-          target.scrollIntoView();
-        }
+      if (interrupted) return;
+
+      const currentTop = container.scrollTop;
+      if (currentTop !== lastTop) {
+        lastTop = currentTop;
+        stableSince = now;
       }
-    });
+      const isStable = now - stableSince > 250;
+      if (isStable && target !== null && Math.abs(currentTop - target) > 1) {
+        container.scrollTo({ top: target, behavior: "instant" });
+        lastTop = target;
+        stableSince = now;
+      }
+      if (now - start < 3000) frame = window.requestAnimationFrame(tick);
+    };
+
+    frame = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      inputEvents.forEach((type) =>
+        container.removeEventListener(type, markInterrupted),
+      );
+      window.removeEventListener("keydown", markInterrupted);
+    };
   }, [location.pathname, location.hash]);
 
   useEffect(() => {

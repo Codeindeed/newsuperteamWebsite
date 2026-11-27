@@ -4,6 +4,8 @@ import SplashCursor from "./components/cursor/Index";
 
 const HomePage = lazy(() => import("./pages/home/Index"));
 const GalleryPage = lazy(() => import("./pages/gallery/Index"));
+const PartnersPage = lazy(() => import("./pages/partners/Index"));
+const NotFoundPage = lazy(() => import("./pages/not-found/Index"));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-black text-white flex items-center justify-center text-body-4">
@@ -19,14 +21,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/gallery" element={<GalleryPage />} />
-            <Route
-              path="*"
-              element={
-                <div className="min-h-screen text-heading-2 text-center flex items-center justify-center text-white">
-                  No Page Found
-                </div>
-              }
-            />
+            <Route path="/partners" element={<PartnersPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
