@@ -1,18 +1,7 @@
-import { FaDiscord, FaInstagram, FaTiktok } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import { HiArrowUpRight } from "react-icons/hi2";
 import PossibleSolana from "@/assets/graphics/possible-solana.svg";
 import Logo from "@/components/logo/Index";
-
-const siteLinks = [
-  { title: "Home", url: "/#home" },
-  { title: "About Us", url: "/#about" },
-  { title: "Gallery", url: "/gallery" },
-  { title: "Events", url: "/#events" },
-  { title: "Products", url: "/#products" },
-  { title: "Partners", url: "/partners" },
-  { title: "Blog", url: "/#blog" },
-];
+import { siteLinks, socialLinks } from "@/data/navigation/Index";
 
 const resourceLinks = [
   { title: "Superteam", url: "https://superteam.fun/" },
@@ -27,29 +16,6 @@ const guildLinks = [
   { title: "Writers", url: "https://discord.com/invite/C6EgkeEAed" },
   { title: "Content Creators", url: "https://discord.com/invite/C6EgkeEAed" },
   { title: "State Guilds", url: "https://discord.com/invite/C6EgkeEAed" },
-];
-
-const socialLinks = [
-  {
-    label: "X",
-    url: "https://x.com/SuperteamNG",
-    Icon: FaXTwitter,
-  },
-  {
-    label: "Discord",
-    url: "https://discord.com/invite/C6EgkeEAed",
-    Icon: FaDiscord,
-  },
-  {
-    label: "Instagram",
-    url: "https://www.instagram.com/superteamng/",
-    Icon: FaInstagram,
-  },
-  {
-    label: "TikTok",
-    url: "https://www.tiktok.com/@superteamng",
-    Icon: FaTiktok,
-  },
 ];
 
 const Footer = () => {
