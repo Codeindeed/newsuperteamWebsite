@@ -10,6 +10,7 @@ const siteLinks = [
   { title: "Gallery", url: "/gallery" },
   { title: "Events", url: "/#events" },
   { title: "Products", url: "/#products" },
+  { title: "Partners", url: "/partners" },
   { title: "Blog", url: "/#blog" },
 ];
 

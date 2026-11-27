@@ -4,6 +4,7 @@ import SplashCursor from "./components/cursor/Index";
 
 const HomePage = lazy(() => import("./pages/home/Index"));
 const GalleryPage = lazy(() => import("./pages/gallery/Index"));
+const PartnersPage = lazy(() => import("./pages/partners/Index"));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-black text-white flex items-center justify-center text-body-4">
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/partners" element={<PartnersPage />} />
             <Route
               path="*"
               element={
