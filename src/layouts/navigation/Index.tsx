@@ -8,6 +8,10 @@ import MobileMenu from "./components/MobileMenu";
 
 const MOBILE_MENU_ID = "mobile-menu";
 
+// The hamburger shows below the lg breakpoint (976px in tailwind.config.js)
+// so tablets get the menu too; from lg upwards the bar is unchanged.
+const DESKTOP_MEDIA_QUERY = "(min-width: 976px)";
+
 const Navigation = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,13 +20,13 @@ const Navigation = () => {
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   // Close on route or hash change (each page mounts its own Navigation, but
-  // the hash can change in place) and when the viewport grows past md.
+  // the hash can change in place) and when the viewport grows past lg.
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const mediaQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
     const handleChange = (event: MediaQueryListEvent) => {
       if (event.matches) setMenuOpen(false);
     };
@@ -43,7 +47,7 @@ const Navigation = () => {
       <Button
         type="secondary"
         to={communityUrl}
-        className="hidden md:inline-block"
+        className="hidden lg:inline-block"
       >
         Join the Community
       </Button>
@@ -55,7 +59,7 @@ const Navigation = () => {
         aria-expanded={menuOpen}
         aria-controls={MOBILE_MENU_ID}
         onClick={() => setMenuOpen((isOpen) => !isOpen)}
-        className="md:hidden w-10 h-10 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white hover:bg-[#333] transition-colors duration-500"
+        className="lg:hidden w-10 h-10 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white hover:bg-[#333] transition-colors duration-500"
       >
         <span
           className={`flex transition-transform duration-500 ${

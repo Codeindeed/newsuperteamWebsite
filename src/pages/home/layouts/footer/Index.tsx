@@ -1,6 +1,7 @@
 import { HiArrowUpRight } from "react-icons/hi2";
 import PossibleSolana from "@/assets/graphics/possible-solana.svg";
 import Logo from "@/components/logo/Index";
+import SiteLink from "@/components/site-link/Index";
 import { siteLinks, socialLinks } from "@/data/navigation/Index";
 
 const resourceLinks = [
@@ -126,14 +127,12 @@ const BottomLinks = ({
         {links.map((item, index) => {
           return (
             <li key={index}>
-              <a
-                href={item.url}
-                target={item.url.startsWith("http") ? "_blank" : undefined}
-                rel={item.url.startsWith("http") ? "noreferrer" : undefined}
+              <SiteLink
+                url={item.url}
                 className="hover:text-grey-40 duration-700 cursor-pointer transition-colors"
               >
                 {item.title}
-              </a>
+              </SiteLink>
             </li>
           );
         })}

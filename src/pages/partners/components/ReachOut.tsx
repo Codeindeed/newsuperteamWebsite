@@ -5,10 +5,12 @@ import { contact } from "../data";
 
 // Same three figures as the homepage stat cards; the members card reuses
 // the homepage members graphic.
+// Two lines each, split exactly like the homepage cards, so the number and
+// label blocks share one baseline across the row.
 const stats = [
   { id: "members", value: "7k+", label: "Members", image: membersImg },
-  { id: "products", value: "200+", label: "Products built on Solana" },
-  { id: "states", value: "30", label: "States in Nigeria" },
+  { id: "products", value: "200+ Products", label: "built on Solana" },
+  { id: "states", value: "30 States", label: "in Nigeria" },
 ];
 
 const ReachOut = () => {
@@ -32,7 +34,7 @@ const ReachOut = () => {
           {stats.map((stat) => (
             <div
               key={stat.id}
-              className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-6 text-left flex flex-col justify-between gap-6 hover:border-white/10 transition-colors duration-500"
+              className="bg-[#1A1A1A] border border-white/5 rounded-2xl p-6 text-left flex flex-col justify-between gap-6 min-h-[164px] hover:border-white/10 transition-colors duration-500"
             >
               <div className="h-9 flex items-center">
                 {stat.image && (
@@ -44,7 +46,7 @@ const ReachOut = () => {
                   />
                 )}
               </div>
-              <div className="text-heading-7 md:text-heading-6 md:!text-[25px] !font-medium">
+              <div className="text-heading-7 md:text-heading-6 md:!text-[25px] !font-medium whitespace-nowrap">
                 <div className="text-white">{stat.value}</div>
                 <div className="text-[#5F5F5F]">{stat.label}</div>
               </div>

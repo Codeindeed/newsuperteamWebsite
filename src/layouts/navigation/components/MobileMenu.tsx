@@ -6,8 +6,9 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Button from "@/components/button/Index";
+import SiteLink from "@/components/site-link/Index";
 import { communityUrl, siteLinks, socialLinks } from "@/data/navigation/Index";
 import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
 
@@ -21,9 +22,9 @@ interface MobileMenuProps {
 // Matches the fade-out duration below so the sheet unmounts after it hides.
 const CLOSE_DURATION_MS = 500;
 
-// Full-screen top sheet for phones, portalled to <body> like the gallery
-// modal. Section links are plain anchors exactly as in the footer (a "/#..."
-// href lands on the homepage section); route links use react-router.
+// Full-screen top sheet below lg, portalled to <body> like the gallery
+// modal. Every entry is a SiteLink, so section links navigate client-side
+// and scroll the page container, exactly as the footer does.
 const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
   const location = useLocation();
   const { containerRef } = useScrollContainer();
@@ -129,7 +130,7 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className={`fixed inset-0 z-[90] md:hidden overflow-y-auto transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-[90] lg:hidden overflow-y-auto transition-opacity duration-500 ease-out ${
         visible ? "opacity-100" : "opacity-0"
       }`}
       style={{
@@ -149,42 +150,24 @@ const MobileMenu = ({ id, open, onClose, toggleRef }: MobileMenuProps) => {
           <ul className="flex flex-col gap-5">
             {siteLinks.map((link, index) => {
               const current = isCurrent(link.url);
-              const ref = index === 0 ? firstItemRef : undefined;
-              const content = (
-                <>
-                  {current && (
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 rounded-full bg-primary"
-                    />
-                  )}
-                  {link.title}
-                </>
-              );
 
               return (
                 <li key={link.title}>
-                  {link.url.startsWith("/#") ? (
-                    <a
-                      ref={ref}
-                      href={link.url}
-                      aria-current={current ? "page" : undefined}
-                      onClick={onClose}
-                      className={itemClass}
-                    >
-                      {content}
-                    </a>
-                  ) : (
-                    <Link
-                      ref={ref}
-                      to={link.url}
-                      aria-current={current ? "page" : undefined}
-                      onClick={onClose}
-                      className={itemClass}
-                    >
-                      {content}
-                    </Link>
-                  )}
+                  <SiteLink
+                    ref={index === 0 ? firstItemRef : undefined}
+                    url={link.url}
+                    current={current}
+                    onClick={onClose}
+                    className={itemClass}
+                  >
+                    {current && (
+                      <span
+                        aria-hidden="true"
+                        className="h-1.5 w-1.5 rounded-full bg-primary"
+                      />
+                    )}
+                    {link.title}
+                  </SiteLink>
                 </li>
               );
             })}

@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { HiArrowUpRight } from "react-icons/hi2";
+import { HiArrowUpRight, HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import Button from "@/components/button/Index";
 import { useScrollContainer } from "@/layouts/vertical-scroll-container/Index";
 import {
@@ -221,8 +221,10 @@ const ScrollableRow = ({ children }: ScrollableRowProps) => {
     };
   }, []);
 
+  // Edge hints: a 48px fade in the section colour (#0F0F0F) that stays solid
+  // for its outer fifth, plus a chevron, on whichever side still has options.
   const fade =
-    "pointer-events-none absolute inset-y-0 w-12 transition-opacity duration-500 md:hidden";
+    "pointer-events-none absolute inset-y-0 flex w-12 items-center text-[18px] text-[#5F5F5F] transition-opacity duration-500 md:hidden";
 
   return (
     <div className="relative self-stretch md:self-auto -mx-4 md:mx-0">
@@ -233,16 +235,20 @@ const ScrollableRow = ({ children }: ScrollableRowProps) => {
       </div>
       <div
         aria-hidden="true"
-        className={`${fade} left-0 bg-gradient-to-r from-[#0F0F0F] to-transparent ${
+        className={`${fade} left-0 justify-start pl-1 bg-gradient-to-r from-[#0F0F0F] from-20% to-transparent ${
           edges.start ? "opacity-100" : "opacity-0"
         }`}
-      />
+      >
+        <HiChevronLeft />
+      </div>
       <div
         aria-hidden="true"
-        className={`${fade} right-0 bg-gradient-to-l from-[#0F0F0F] to-transparent ${
+        className={`${fade} right-0 justify-end pr-1 bg-gradient-to-l from-[#0F0F0F] from-20% to-transparent ${
           edges.end ? "opacity-100" : "opacity-0"
         }`}
-      />
+      >
+        <HiChevronRight />
+      </div>
     </div>
   );
 };
